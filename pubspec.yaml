@@ -52,6 +52,18 @@ flutter:
 
   assets:
     - assets/mira_hq.png
+    - assets/players/brown.png
+    - assets/players/red.png
+    - assets/players/orange.png
+    - assets/players/yellow.png
+    - assets/players/lime.png
+    - assets/players/green.png
+    - assets/players/cyan.png
+    - assets/players/blue.png
+    - assets/players/purple.png
+    - assets/players/pink.png
+    - assets/players/white.png
+    - assets/players/black.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

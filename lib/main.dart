@@ -1,5 +1,6 @@
 import 'package:among_us_helper/icons.dart';
 import 'package:among_us_helper/map_page.dart';
+import 'package:among_us_helper/pathing_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -53,7 +54,7 @@ class _MainPageState extends State<MainPage> {
         unselectedItemColor: Colors.white54,
       ),
       backgroundColor: Theme.of(context).canvasColor,
-      body: MapPage(),
+      body: _selectedTab == 0 ? MapPage() : PathingPage(),
     );
   }
 }
