@@ -28,6 +28,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
+  photo_view:
 
 dev_dependencies:
   flutter_test:
@@ -43,6 +44,14 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  fonts:
+    - family: AmongUsHelperApp
+      fonts:
+        - asset: assets/fonts/AmongUsHelperApp.ttf
+
+  assets:
+    - assets/mira_hq.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

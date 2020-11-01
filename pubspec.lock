@@ -88,6 +88,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.2"
+  photo_view:
+    dependency: "direct main"
+    description:
+      name: photo_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.2"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -151,3 +158,4 @@ packages:
     version: "2.1.0-nullsafety.4"
 sdks:
   dart: ">=2.11.0-0.0 <=2.12.0-3.0.dev"
+  flutter: ">=1.6.0 <2.0.0"
