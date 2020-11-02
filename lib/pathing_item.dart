@@ -26,11 +26,13 @@ class PathingTile extends StatelessWidget {
       child: setExpansionTileTextColor(
         color: textColor,
         expansionTile: ExpansionTile(
+          visualDensity: VisualDensity.standard,
           tilePadding: EdgeInsets.symmetric(horizontal: 16),
           leading: SizedBox(height: 40, child: icon),
           title: Text(label, style: TextStyle(color: textColor)),
           childrenPadding: EdgeInsets.fromLTRB(16, 0, 16, 16),
           children: [
+            SizedBox(height: 16),
             _buildDetails(context, isBright),
             SizedBox(height: 16),
             if (onMapPressed != null) Row(
@@ -70,6 +72,7 @@ class PathingTile extends StatelessWidget {
 
     var entries = pathing.entries.map((entry) {
       var formattedTime = '${formatTime(entry.value)}';
+      bool isLast = pathing.entries.last.value == entry.value;
 
       return Column(
         children: [
@@ -80,7 +83,7 @@ class PathingTile extends StatelessWidget {
               ],
               mainAxisAlignment: MainAxisAlignment.spaceBetween
           ),
-          Divider(color: dividerColor)
+          if(!isLast) Divider(color: dividerColor)
         ],
       );
     }).toList();

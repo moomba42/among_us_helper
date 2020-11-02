@@ -136,15 +136,6 @@ class _NotesPageState extends State<NotesPage> {
     String camelName = name.substring(0, 1).toUpperCase() + name.substring(1);
     Color textColor = isBright ? Colors.black87 : Colors.white;
 
-    Widget trailing = Icon(Icons.drag_handle, color: textColor);
-
-    var isMobile = (Platform.isIOS || Platform.isAndroid) &&
-        !Platform.isMacOS && !Platform.isWindows && !Platform.isLinux;
-
-    if(isMobile) {
-      trailing = ReorderableListener(child: trailing);
-    }
-
     Widget content = Material(
         borderRadius: BorderRadius.circular(4),
         elevation: state == ReorderableItemState.dragProxy ? 8 : 2,
@@ -160,13 +151,37 @@ class _NotesPageState extends State<NotesPage> {
                   filterQuality: FilterQuality.high
               )
           ),
-          trailing: trailing,
+          // Compensate for the icon added in the stack later on
+          trailing: SizedBox(width: 24,),
           title: Text(camelName, style: TextStyle(color: textColor)),
           tileColor: bgColor,
         )
     );
 
-    if(!isMobile) {
+    var isMobile = (Platform.isIOS || Platform.isAndroid) &&
+        !Platform.isMacOS && !Platform.isWindows && !Platform.isLinux;
+
+    if(isMobile) {
+      // Add a drag handle at the end of the tile. It's here to allow for a bigger tap target.
+      content = Stack(
+        clipBehavior: Clip.none,
+        children: [
+          content,
+          Positioned(
+            right: 16,
+            top: 16,
+            child: Icon(Icons.drag_handle, color: textColor, size: 24),
+          ),
+          Positioned(
+            right: 0,
+            top: 0,
+            child: ReorderableListener(
+                child: Container(width: 56, height: 56, color: Colors.transparent)
+            ),
+          ),
+        ],
+      );
+    } else {
       content = ReorderableListener(
         child: content,
       );
