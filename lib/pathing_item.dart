@@ -1,31 +1,100 @@
-import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-class PathingItem extends StatelessWidget {
-  final String name;
+class PathingTile extends StatelessWidget {
+  final String label;
   final Widget icon;
-  final Color color;
-  final Function onMap;
-  final Map<String, int> pathing;
+  final Color tileColor;
+  final Function onMapPressed;
+  final Map<String, double> pathing;
 
-  const PathingItem({Key key, this.name, this.icon, this.color, this.onMap, this.pathing})
+  const PathingTile(
+      {Key key, this.label, this.icon, this.tileColor, this.onMapPressed, this.pathing})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var isBright = tileColor.computeLuminance() > 0.5;
+    var textColor = isBright ? Colors.black87 : Colors.white;
+
     return Card(
       elevation: 2,
       shadowColor: Colors.black,
       clipBehavior: Clip.antiAlias,
-      child: ListTile(
-        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        leading: SizedBox(height: 40, child: icon),
-        title: Text(name, style: TextStyle(color: Colors.white)),
-        tileColor: color,
-        trailing: Transform.rotate(angle: 90 * pi / 180,
-          child: Icon(Icons.chevron_right, color: Colors.white)),
+      color: tileColor,
+      child: setExpansionTileTextColor(
+        color: textColor,
+        expansionTile: ExpansionTile(
+          tilePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          leading: SizedBox(height: 40, child: icon),
+          title: Text(label, style: TextStyle(color: textColor)),
+          childrenPadding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+          children: [
+            _buildDetails(context, isBright),
+            SizedBox(height: 16),
+            if (onMapPressed != null) Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                OutlineButton.icon(
+                  textColor: textColor,
+                  hoverColor: textColor.withOpacity(0.1),
+                  highlightedBorderColor: Colors.white,
+                  visualDensity: VisualDensity.standard,
+                  onPressed: (){},
+                  label: Text('SHOW ON MAP'),
+                  icon: Icon(Icons.arrow_forward)
+                )
+              ],
+            )
+          ],
+        )
       ),
     );
+  }
+
+  Widget setExpansionTileTextColor({Color color, ExpansionTile expansionTile}) {
+    var theme = ThemeData(accentColor: color, unselectedWidgetColor: color);
+    return Theme(
+      data: theme,
+      child: expansionTile,
+    );
+  }
+
+  Widget _buildDetails(BuildContext context, bool isBrightBackground) {
+    var textColor = isBrightBackground ? Colors.black87 : Colors.white;
+    var dividerColor = isBrightBackground ? Colors.black54 : Colors.white60;
+
+    var labelTextTheme = Theme.of(context).textTheme.bodyText2.copyWith(color: textColor);
+    var timeTextTheme = labelTextTheme.copyWith(fontFeatures: [FontFeature.tabularFigures()]);
+
+    var entries = pathing.entries.map((entry) {
+      var formattedTime = '${formatTime(entry.value)}';
+
+      return Column(
+        children: [
+          Row(
+              children: [
+                Text(entry.key, style: labelTextTheme),
+                Text(formattedTime, style: timeTextTheme)
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceBetween
+          ),
+          Divider(color: dividerColor)
+        ],
+      );
+    }).toList();
+
+    return Column(
+      children: entries,
+    );
+  }
+
+  String formatTime(double time) {
+    Duration duration = Duration(milliseconds: time.round());
+
+    return [duration.inMinutes, duration.inSeconds]
+        .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
+        .join(':');
   }
 }
