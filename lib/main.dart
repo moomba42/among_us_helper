@@ -1,5 +1,6 @@
 import 'package:among_us_helper/icons.dart';
 import 'package:among_us_helper/map_page.dart';
+import 'package:among_us_helper/notes_page.dart';
 import 'package:among_us_helper/pathing_page.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +55,7 @@ class _MainPageState extends State<MainPage> {
         unselectedItemColor: Colors.white54,
       ),
       backgroundColor: Theme.of(context).canvasColor,
-      body: _selectedTab == 0 ? MapPage() : PathingPage(),
+      body: _selectedTab == 0 ? MapPage() : (_selectedTab == 1 ? PathingPage() : NotesPage()),
     );
   }
 }

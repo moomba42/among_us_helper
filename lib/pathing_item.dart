@@ -26,7 +26,7 @@ class PathingTile extends StatelessWidget {
       child: setExpansionTileTextColor(
         color: textColor,
         expansionTile: ExpansionTile(
-          tilePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          tilePadding: EdgeInsets.symmetric(horizontal: 16),
           leading: SizedBox(height: 40, child: icon),
           title: Text(label, style: TextStyle(color: textColor)),
           childrenPadding: EdgeInsets.fromLTRB(16, 0, 16, 16),

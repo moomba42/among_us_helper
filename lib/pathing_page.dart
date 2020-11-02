@@ -12,6 +12,7 @@ class _PathingPageState extends State<PathingPage> {
   @override
   Widget build(BuildContext context) {
     var headline3 = Theme.of(context).textTheme.headline3.copyWith(color: Colors.black87);
+
     return SafeArea(
       child: ListView(
         padding: EdgeInsets.symmetric(horizontal: 16),
