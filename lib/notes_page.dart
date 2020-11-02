@@ -18,14 +18,29 @@ enum NotesSection {
   DEAD
 }
 
+enum NotesMenuActions {
+  RESET
+}
+
 class _NotesPageState extends State<NotesPage> {
 
   List<dynamic> _notesList = [
     NotesSection.SUS,
     NotesSection.INNOCENT,
-    NotesSection.UNKNOWN, ...Player.values,
-    NotesSection.DEAD
+    NotesSection.DEAD,
+    NotesSection.UNKNOWN, ...Player.values
   ];
+
+  void _reset() {
+    setState(() {
+      _notesList = [
+        NotesSection.SUS,
+        NotesSection.INNOCENT,
+        NotesSection.DEAD,
+        NotesSection.UNKNOWN, ...Player.values
+      ];
+    });
+  }
 
   int _indexOfKey(ValueKey key) {
     return _notesList.indexWhere((dynamic p) => key.value == p);
@@ -67,7 +82,27 @@ class _NotesPageState extends State<NotesPage> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text('Notes', style: headline3),
+                child: Row(
+                  textBaseline: TextBaseline.ideographic,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Notes', style: headline3),
+                    // FlatButton(onPressed: () {}, child: Text("New Round"))
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.autorenew),
+                          onPressed: _reset,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.settings),
+                          onPressed: () {},
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
             SliverPadding(
@@ -78,6 +113,9 @@ class _NotesPageState extends State<NotesPage> {
                   childCount: _notesList.length
                 ),
               ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(height: 16,),
             )
           ],
         ),

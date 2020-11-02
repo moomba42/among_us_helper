@@ -41,7 +41,7 @@ class PathingTile extends StatelessWidget {
                 OutlineButton.icon(
                   textColor: textColor,
                   hoverColor: textColor.withOpacity(0.1),
-                  highlightedBorderColor: Colors.white,
+                  highlightedBorderColor: textColor,
                   visualDensity: VisualDensity.standard,
                   onPressed: (){},
                   label: Text('SHOW ON MAP'),
