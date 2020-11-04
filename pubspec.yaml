@@ -66,6 +66,9 @@ flutter:
     - assets/players/pink.png
     - assets/players/white.png
     - assets/players/black.png
+    - assets/maps/mira.jpg
+    - assets/maps/polus.jpg
+    - assets/maps/skeld.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
