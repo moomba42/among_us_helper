@@ -1,4 +1,6 @@
 import 'package:among_us_helper/map.dart';
+import 'package:among_us_helper/map_display.dart';
+import 'package:among_us_helper/player.dart';
 import "package:flutter/material.dart";
 import "package:photo_view/photo_view.dart";
 
@@ -42,23 +44,14 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     var safePadding = MediaQuery.of(context).padding.top;
     var assetImage = AssetImage("assets/maps/${_getSelectedMapLink()}.jpg");
 
-    var playerImage = Image(
-        image: AssetImage("assets/players/brown.png"),
-        isAntiAlias: true,
-        filterQuality: FilterQuality.high);
-
     return Stack(
       children: [
         LayoutBuilder(
           builder: (context, constraints) => PhotoView.customChild(
-            child: Stack(
-              children: [
-                Image(image: assetImage),
-                Positioned(
-                  left: _lastTap.dx - 15,
-                  top: _lastTap.dy - 20,
-                  child: SizedBox(child: playerImage, height: 40),
-                )
+            child: MapDisplay(
+              mapImage: assetImage,
+              pathing: [
+                (PathingEntry()..position = Offset(200, 200))..players = [Player.BLUE, Player.ORANGE, Player.WHITE, Player.BLACK]
               ],
             ),
             childSize: Size(1280, 719),
