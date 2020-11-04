@@ -23,7 +23,7 @@ class _PathingPageState extends State<PathingPage> {
           ),
           PathingTile(
             label: 'Brown',
-            icon: Image(image: AssetImage("assets/players/brown.png"), isAntiAlias: true, filterQuality: FilterQuality.high,),
+            icon: Image(image: AssetImage("assets/players/brown.png"), isAntiAlias: true, filterQuality: FilterQuality.high),
             tileColor: Color(0xFF72491E),
             onMapPressed: () {},
             pathing: {

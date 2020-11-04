@@ -20,6 +20,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   List<AUMap> _mapOptions = AUMap.values.toList(growable: false);
   int _selectedMap = 0;
 
+  Offset _lastTap = Offset.zero;
+
   @override
   void initState() {
     _animController =
@@ -38,12 +40,31 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var safePadding = MediaQuery.of(context).padding.top;
+    var assetImage = AssetImage("assets/maps/${_getSelectedMapLink()}.jpg");
+
+    var playerImage = Image(
+        image: AssetImage("assets/players/brown.png"),
+        isAntiAlias: true,
+        filterQuality: FilterQuality.high);
 
     return Stack(
       children: [
-        PhotoView(
-          imageProvider: AssetImage("assets/maps/${_getSelectedMapLink()}.jpg"),
-          backgroundDecoration: BoxDecoration(color: const Color(0xFF2E3444)),
+        LayoutBuilder(
+          builder: (context, constraints) => PhotoView.customChild(
+            child: Stack(
+              children: [
+                Image(image: assetImage),
+                Positioned(
+                  left: _lastTap.dx - 15,
+                  top: _lastTap.dy - 20,
+                  child: SizedBox(child: playerImage, height: 40),
+                )
+              ],
+            ),
+            childSize: Size(1280, 719),
+            backgroundDecoration: BoxDecoration(color: const Color(0xFF2E3444)),
+            onTapUp: (context, details, value) => _onPhotoViewClicked(details, value, constraints)
+          ),
         ),
         Positioned(
           top: 0,
@@ -74,16 +95,50 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
           right: 0,
           child: SafeArea(
             child: Column(
-              children: _getNonSelectedMaps().map((map) =>
-                _buildMapOption(
-                    name: map.getName(),
-                    onSelect: () => _selectMap(map)
-                )).toList(growable: false)
-            ),
+                children: _getNonSelectedMaps()
+                    .map((map) =>
+                        _buildMapOption(name: map.getName(), onSelect: () => _selectMap(map)))
+                    .toList(growable: false)),
           ),
         )
       ],
     );
+  }
+
+  void _onPhotoViewClicked(TapUpDetails details,
+      PhotoViewControllerValue value, BoxConstraints widget) {
+    // [value.position] is the position of the middle of the screen relative
+    // to the center of the image, in screen pixels.
+    // [details.localPosition] is the position of the cursor
+    // relative to the widget, in pixels
+
+    // Get the position of the middle of the screen relative to the center of the image in image pixels.
+    var widgetCenterOnImageOnImage = value.position / value.scale;
+
+    // Get the widget size in screen pixels.
+    var widgetSizeOnScreen = Offset(widget.maxWidth, widget.maxHeight);
+
+    // Get the click position in screen pixels, relative to the top left corner of the widget.
+    var clickTopLeftOnScreen = details.localPosition;
+
+    // Get the click position relative to the widget center in screen pixels.
+    // X axis pints to the left, Y axis points up.
+    var clickRelativeToCenterOnScreen = (widgetSizeOnScreen / 2) - clickTopLeftOnScreen;
+
+    var clickRelativeToWidgetCenterOnImage = clickRelativeToCenterOnScreen / value.scale;
+
+    // Get the click position in image pixels, relative to the image center.
+    var clickPos =
+        widgetCenterOnImageOnImage + clickRelativeToWidgetCenterOnImage;
+
+    var imageSize = Offset(1280, 719);
+
+    // Get the click position in image pixels, relative to the image's top left corner.
+    var clickOnImage = (imageSize / 2) - clickPos;
+
+    setState(() {
+      _lastTap = clickOnImage;
+    });
   }
 
   Widget _buildMapOption({String name, Function onSelect}) {
@@ -125,7 +180,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   void _selectMap(AUMap map) {
     _selectedMap = _mapOptions.indexOf(map);
-    if(_expanded) {
+    if (_expanded) {
       _expanded = false;
       _animController.forward();
     }
