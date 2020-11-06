@@ -71,6 +71,8 @@ class _MapDisplayState extends State<MapDisplay> {
 }
 
 class PathingEntry {
-  Offset position;
-  List<Player> players;
+  final Offset position;
+  final List<Player> players;
+
+  PathingEntry(this.position, this.players);
 }

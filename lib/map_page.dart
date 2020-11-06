@@ -1,6 +1,7 @@
 import 'package:among_us_helper/map.dart';
 import 'package:among_us_helper/map_display.dart';
 import 'package:among_us_helper/player.dart';
+import 'package:among_us_helper/player_select.dart';
 import "package:flutter/material.dart";
 import "package:photo_view/photo_view.dart";
 
@@ -22,7 +23,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   List<AUMap> _mapOptions = AUMap.values.toList(growable: false);
   int _selectedMap = 0;
 
-  Offset _lastTap = Offset.zero;
+  List<PathingEntry> _pathing = [];
 
   @override
   void initState() {
@@ -50,9 +51,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
           builder: (context, constraints) => PhotoView.customChild(
             child: MapDisplay(
               mapImage: assetImage,
-              pathing: [
-                (PathingEntry()..position = Offset(200, 200))..players = [Player.BLUE, Player.ORANGE, Player.WHITE, Player.BLACK]
-              ],
+              pathing: _pathing,
             ),
             childSize: Size(1280, 719),
             backgroundDecoration: BoxDecoration(color: const Color(0xFF2E3444)),
@@ -129,9 +128,27 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     // Get the click position in image pixels, relative to the image's top left corner.
     var clickOnImage = (imageSize / 2) - clickPos;
 
-    setState(() {
-      _lastTap = clickOnImage;
-    });
+    _onMapClicked(clickOnImage);
+  }
+
+  void _onMapClicked(Offset inPixels) {
+    showModalBottomSheet<void>(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8)
+            )
+        ),
+        builder: (context) => PlayerSelect(
+          onSelected: (selectedPlayers) {
+            Navigator.pop(context);
+            setState(() {
+              _pathing.add(PathingEntry(inPixels, selectedPlayers));
+            });
+          },
+        )
+    );
   }
 
   Widget _buildMapOption({String name, Function onSelect}) {
@@ -173,6 +190,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   void _selectMap(AUMap map) {
     _selectedMap = _mapOptions.indexOf(map);
+    _pathing = [];
     if (_expanded) {
       _expanded = false;
       _animController.forward();
