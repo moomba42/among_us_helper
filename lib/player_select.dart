@@ -79,16 +79,48 @@ class _PlayerSelectState extends State<PlayerSelect> {
   Widget _buildPlayerOption(Player player, bool selected) {
     var primaryColor = Theme.of(context).primaryColor;
 
+    Color bgColor = player.getColor();
+    bool isBright = bgColor.computeLuminance() > 0.5;
+    String name = player.toString().split('.')[1].toLowerCase();
+    String camelName = name.substring(0, 1).toUpperCase() + name.substring(1);
+    Color textColor = isBright ? Colors.black87 : Colors.white;
+
     var button = RaisedButton(
       elevation: selected ? 4 : null,
       onPressed: () => _onPlayerToggle(player),
       color: player.getColor(),
-      child: Text(player.toString().split(".")[1]),
+      padding: EdgeInsets.zero,
+      animationDuration: Duration(milliseconds: 200),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Stack(children: [
+        Positioned(
+          left: -30,
+          bottom: -60,
+          right: 20,
+          top: 40,
+          child: Image(
+              image: AssetImage("assets/players/$name.png"),
+              isAntiAlias: true,
+              filterQuality: FilterQuality.high
+          )
+        ),
+        Container(constraints: BoxConstraints.expand(),),
+        Positioned(
+          left: 16,
+            top: 8,
+            child: Text(
+              camelName,
+              style: Theme.of(context).textTheme.bodyText2.copyWith(color: textColor)
+            )
+        )
+      ]),
     );
 
     var decoration = ShapeDecoration(
         color: selected ? primaryColor.withOpacity(0.54) : primaryColor.withOpacity(0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
     );
 
     return AnimatedContainer(
