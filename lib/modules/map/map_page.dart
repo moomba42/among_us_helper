@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:among_us_helper/map.dart';
-import 'package:among_us_helper/map_display.dart';
-import 'package:among_us_helper/player_select.dart';
+import 'package:among_us_helper/modules/map/model/map.dart';
+import 'package:among_us_helper/modules/map/map_display.dart';
+import 'package:among_us_helper/modules/map/player_select.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_svg/flutter_svg.dart';
 import "package:photo_view/photo_view.dart";
@@ -51,14 +51,14 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       children: [
         LayoutBuilder(
           builder: (context, constraints) => PhotoView.customChild(
-            child: MapDisplay(
-              mapImage: assetImage,
-              pathing: _pathing,
-            ),
-            childSize: Size(1280, 719),
-            backgroundDecoration: BoxDecoration(color: const Color(0xFF2E3444)),
-            onTapUp: (context, details, value) => _onPhotoViewClicked(details, value, constraints)
-          ),
+              child: MapDisplay(
+                mapImage: assetImage,
+                pathing: _pathing,
+              ),
+              childSize: Size(1280, 719),
+              backgroundDecoration: BoxDecoration(color: const Color(0xFF2E3444)),
+              onTapUp: (context, details, value) =>
+                  _onPhotoViewClicked(details, value, constraints)),
         ),
         Positioned(
           top: 0,
@@ -99,8 +99,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     );
   }
 
-  void _onPhotoViewClicked(TapUpDetails details,
-      PhotoViewControllerValue value, BoxConstraints widget) {
+  void _onPhotoViewClicked(
+      TapUpDetails details, PhotoViewControllerValue value, BoxConstraints widget) {
     // [value.position] is the position of the middle of the screen relative
     // to the center of the image, in screen pixels.
     // [details.localPosition] is the position of the cursor
@@ -122,8 +122,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     var clickRelativeToWidgetCenterOnImage = clickRelativeToCenterOnScreen / value.scale;
 
     // Get the click position in image pixels, relative to the image center.
-    var clickPos =
-        widgetCenterOnImageOnImage + clickRelativeToWidgetCenterOnImage;
+    var clickPos = widgetCenterOnImageOnImage + clickRelativeToWidgetCenterOnImage;
 
     var imageSize = Offset(1280, 719);
 
@@ -137,20 +136,16 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     showModalBottomSheet<void>(
         context: context,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8)
-            )
-        ),
+            borderRadius:
+                BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8))),
         builder: (context) => PlayerSelect(
-          onSelected: (selectedPlayers) {
-            Navigator.pop(context);
-            setState(() {
-              _pathing.add(PathingEntry(inPixels, selectedPlayers));
-            });
-          },
-        )
-    );
+              onSelected: (selectedPlayers) {
+                Navigator.pop(context);
+                setState(() {
+                  _pathing.add(PathingEntry(inPixels, selectedPlayers));
+                });
+              },
+            ));
   }
 
   Widget _buildMapOption({String name, Function onSelect}) {

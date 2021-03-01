@@ -1,6 +1,6 @@
 enum AUMap { SKELD, MIRA }
 
-extension AUMapName on AUMap {
+extension AUMapGetName on AUMap {
   String getName() {
     switch (this) {
       case AUMap.SKELD:

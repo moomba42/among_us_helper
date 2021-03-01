@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:among_us_helper/player.dart';
+import 'package:among_us_helper/core/model/player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,24 +11,17 @@ class NotesPage extends StatefulWidget {
   _NotesPageState createState() => _NotesPageState();
 }
 
-enum NotesSection {
-  SUS,
-  INNOCENT,
-  UNKNOWN,
-  DEAD
-}
+enum NotesSection { SUS, INNOCENT, UNKNOWN, DEAD }
 
-enum NotesMenuActions {
-  RESET
-}
+enum NotesMenuActions { RESET }
 
 class _NotesPageState extends State<NotesPage> {
-
   List<dynamic> _notesList = [
     NotesSection.SUS,
     NotesSection.INNOCENT,
     NotesSection.DEAD,
-    NotesSection.UNKNOWN, ...Player.values
+    NotesSection.UNKNOWN,
+    ...Player.values
   ];
 
   void _reset() {
@@ -37,7 +30,8 @@ class _NotesPageState extends State<NotesPage> {
         NotesSection.SUS,
         NotesSection.INNOCENT,
         NotesSection.DEAD,
-        NotesSection.UNKNOWN, ...Player.values
+        NotesSection.UNKNOWN,
+        ...Player.values
       ];
     });
   }
@@ -48,14 +42,14 @@ class _NotesPageState extends State<NotesPage> {
 
   bool _reorderCallback(Key item, Key newPosition) {
     // Prevent reordering section headers
-    if(item is ValueKey && item.value is NotesSection) {
+    if (item is ValueKey && item.value is NotesSection) {
       return false;
     }
 
     int draggingIndex = _indexOfKey(item);
     int newPositionIndex = _indexOfKey(newPosition);
 
-    if(newPositionIndex == 0) {
+    if (newPositionIndex == 0) {
       return false;
     }
 
@@ -73,65 +67,64 @@ class _NotesPageState extends State<NotesPage> {
     var headline3 = Theme.of(context).textTheme.headline3.copyWith(color: Colors.black87);
 
     return SafeArea(
-      child: ReorderableList(
-        decoratePlaceholder: (widget, opacity) { return DecoratedPlaceholder(offset: 0, widget: widget);},
-        onReorderDone: (item) {},
-        onReorder: _reorderCallback,
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  textBaseline: TextBaseline.ideographic,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Notes', style: headline3),
-                    // FlatButton(onPressed: () {}, child: Text("New Round"))
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.autorenew),
-                          onPressed: _reset,
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.settings),
-                          onPressed: () {},
-                        )
-                      ],
-                    )
-                  ],
-                ),
+        child: ReorderableList(
+      decoratePlaceholder: (widget, opacity) {
+        return DecoratedPlaceholder(offset: 0, widget: widget);
+      },
+      onReorderDone: (item) {},
+      onReorder: _reorderCallback,
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                textBaseline: TextBaseline.ideographic,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Notes', style: headline3),
+                  // FlatButton(onPressed: () {}, child: Text("New Round"))
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.autorenew),
+                        onPressed: _reset,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.settings),
+                        onPressed: () {},
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              sliver: SliverList(
-                delegate:  SliverChildBuilderDelegate(
-                  _buildListEntry,
-                  childCount: _notesList.length
-                ),
-              ),
+          ),
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(_buildListEntry, childCount: _notesList.length),
             ),
-            SliverToBoxAdapter(
-              child: SizedBox(height: 16,),
-            )
-          ],
-        ),
-      )
-    );
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 16,
+            ),
+          )
+        ],
+      ),
+    ));
   }
 
   Widget _buildListEntry(BuildContext context, int index) {
-
     dynamic entry = _notesList[index];
 
-    if(entry is NotesSection) {
+    if (entry is NotesSection) {
       return _buildHeader(context, entry);
     }
 
-    if(entry is Player) {
+    if (entry is Player) {
       return _buildEntry(context, entry);
     }
 
@@ -163,8 +156,7 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   Widget _buildEntryContent(BuildContext context, ReorderableItemState state, Player player) {
-
-    if(state == ReorderableItemState.placeholder) {
+    if (state == ReorderableItemState.placeholder) {
       return SizedBox(height: 56);
     }
 
@@ -186,20 +178,21 @@ class _NotesPageState extends State<NotesPage> {
               child: Image(
                   image: AssetImage("assets/players/$name.png"),
                   isAntiAlias: true,
-                  filterQuality: FilterQuality.high
-              )
-          ),
+                  filterQuality: FilterQuality.high)),
           // Compensate for the icon added in the stack later on
-          trailing: SizedBox(width: 24,),
+          trailing: SizedBox(
+            width: 24,
+          ),
           title: Text(camelName, style: TextStyle(color: textColor)),
           tileColor: bgColor,
-        )
-    );
+        ));
 
     var isMobile = (Platform.isIOS || Platform.isAndroid) &&
-        !Platform.isMacOS && !Platform.isWindows && !Platform.isLinux;
+        !Platform.isMacOS &&
+        !Platform.isWindows &&
+        !Platform.isLinux;
 
-    if(isMobile) {
+    if (isMobile) {
       // Add a drag handle at the end of the tile. It's here to allow for a bigger tap target.
       content = Stack(
         clipBehavior: Clip.none,
@@ -214,8 +207,7 @@ class _NotesPageState extends State<NotesPage> {
             right: 0,
             top: 0,
             child: ReorderableListener(
-                child: Container(width: 56, height: 56, color: Colors.transparent)
-            ),
+                child: Container(width: 56, height: 56, color: Colors.transparent)),
           ),
         ],
       );
@@ -224,7 +216,7 @@ class _NotesPageState extends State<NotesPage> {
         child: content,
       );
     }
-    
+
     return content;
   }
 }

@@ -18,7 +18,6 @@ enum Player {
 extension PlayerColor on Player {
   Color getColor() {
     switch (this) {
-
       case Player.BROWN:
         return Color(0xFF72491E);
       case Player.RED:

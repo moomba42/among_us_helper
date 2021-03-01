@@ -1,7 +1,7 @@
-import 'package:among_us_helper/icons.dart';
-import 'package:among_us_helper/map_page.dart';
-import 'package:among_us_helper/notes_page.dart';
-import 'package:among_us_helper/pathing_page.dart';
+import 'package:among_us_helper/core/icons.dart';
+import 'package:among_us_helper/modules/map/map_page.dart';
+import 'package:among_us_helper/modules/notes/notes_page.dart';
+import 'package:among_us_helper/modules/pathing/pathing_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,7 +30,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   int _selectedTab = 0;
 
   void _onTabTapped(int index) {

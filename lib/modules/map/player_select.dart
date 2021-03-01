@@ -1,9 +1,8 @@
-import 'package:among_us_helper/player.dart';
+import 'package:among_us_helper/core/model/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class PlayerSelect extends StatefulWidget {
-
   final Function(List<Player>) onSelected;
 
   const PlayerSelect({Key key, this.onSelected}) : super(key: key);
@@ -13,8 +12,8 @@ class PlayerSelect extends StatefulWidget {
 }
 
 class _PlayerSelectState extends State<PlayerSelect> {
-
-  Map<Player, bool> _selection = Map.fromEntries(Player.values.map((e) => MapEntry(e, false)).toList(growable: false));
+  Map<Player, bool> _selection =
+      Map.fromEntries(Player.values.map((e) => MapEntry(e, false)).toList(growable: false));
 
   void _onPlayerToggle(Player player) {
     setState(() {
@@ -49,10 +48,7 @@ class _PlayerSelectState extends State<PlayerSelect> {
         children: [
           _buildDragHandle(),
           SizedBox(height: contentSpacing),
-          Text(
-              "Who was here?",
-              style: headlineStyle
-          ),
+          Text("Who was here?", style: headlineStyle),
           SizedBox(height: contentSpacing),
           GridView.count(
             primary: true,
@@ -67,10 +63,9 @@ class _PlayerSelectState extends State<PlayerSelect> {
                 .toList(growable: false),
           ),
           _buildSubmitButton(
-            onPressed: _isAnythingSelected() ? _onSubmit : null,
-            label: "Confirm Positions",
-            icon: Icons.check_circle
-          )
+              onPressed: _isAnythingSelected() ? _onSubmit : null,
+              label: "Confirm Positions",
+              icon: Icons.check_circle)
         ],
       ),
     );
@@ -91,37 +86,31 @@ class _PlayerSelectState extends State<PlayerSelect> {
       color: player.getColor(),
       padding: EdgeInsets.zero,
       animationDuration: Duration(milliseconds: 200),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Stack(children: [
         Positioned(
-          left: -30,
-          bottom: -60,
-          right: 20,
-          top: 40,
-          child: Image(
-              image: AssetImage("assets/players/$name.png"),
-              isAntiAlias: true,
-              filterQuality: FilterQuality.high
-          )
+            left: -30,
+            bottom: -60,
+            right: 20,
+            top: 40,
+            child: Image(
+                image: AssetImage("assets/players/$name.png"),
+                isAntiAlias: true,
+                filterQuality: FilterQuality.high)),
+        Container(
+          constraints: BoxConstraints.expand(),
         ),
-        Container(constraints: BoxConstraints.expand(),),
         Positioned(
-          left: 16,
+            left: 16,
             top: 8,
-            child: Text(
-              camelName,
-              style: Theme.of(context).textTheme.bodyText2.copyWith(color: textColor)
-            )
-        )
+            child: Text(camelName,
+                style: Theme.of(context).textTheme.bodyText2.copyWith(color: textColor)))
       ]),
     );
 
     var decoration = ShapeDecoration(
         color: selected ? primaryColor.withOpacity(0.54) : primaryColor.withOpacity(0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
-    );
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)));
 
     return AnimatedContainer(
       curve: Curves.easeInOut,
@@ -140,9 +129,7 @@ class _PlayerSelectState extends State<PlayerSelect> {
           width: 100,
           decoration: ShapeDecoration(
               color: Colors.black38,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))
-          )
-      ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)))),
     );
   }
 
@@ -153,13 +140,8 @@ class _PlayerSelectState extends State<PlayerSelect> {
       color: Theme.of(context).primaryColor,
       child: Stack(
         children: [
-          Positioned(
-              left: 30,
-              child: Icon(icon, color: Theme.of(context).primaryIconTheme.color)
-          ),
-          Center(
-            child: Text(label, style: Theme.of(context).primaryTextTheme.headline6)
-          )
+          Positioned(left: 30, child: Icon(icon, color: Theme.of(context).primaryIconTheme.color)),
+          Center(child: Text(label, style: Theme.of(context).primaryTextTheme.headline6))
         ],
       ),
     );

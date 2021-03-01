@@ -24,34 +24,33 @@ class PathingTile extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       color: tileColor,
       child: setExpansionTileTextColor(
-        color: textColor,
-        expansionTile: ExpansionTile(
-          visualDensity: VisualDensity.standard,
-          tilePadding: EdgeInsets.symmetric(horizontal: 16),
-          leading: SizedBox(height: 40, child: icon),
-          title: Text(label, style: TextStyle(color: textColor)),
-          childrenPadding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-          children: [
-            SizedBox(height: 16),
-            _buildDetails(context, isBright),
-            SizedBox(height: 16),
-            if (onMapPressed != null) Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                OutlineButton.icon(
-                  textColor: textColor,
-                  hoverColor: textColor.withOpacity(0.1),
-                  highlightedBorderColor: textColor,
-                  visualDensity: VisualDensity.standard,
-                  onPressed: (){},
-                  label: Text('SHOW ON MAP'),
-                  icon: Icon(Icons.arrow_forward)
+          color: textColor,
+          expansionTile: ExpansionTile(
+            visualDensity: VisualDensity.standard,
+            tilePadding: EdgeInsets.symmetric(horizontal: 16),
+            leading: SizedBox(height: 40, child: icon),
+            title: Text(label, style: TextStyle(color: textColor)),
+            childrenPadding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+            children: [
+              SizedBox(height: 16),
+              _buildDetails(context, isBright),
+              SizedBox(height: 16),
+              if (onMapPressed != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    OutlineButton.icon(
+                        textColor: textColor,
+                        hoverColor: textColor.withOpacity(0.1),
+                        highlightedBorderColor: textColor,
+                        visualDensity: VisualDensity.standard,
+                        onPressed: () {},
+                        label: Text('SHOW ON MAP'),
+                        icon: Icon(Icons.arrow_forward))
+                  ],
                 )
-              ],
-            )
-          ],
-        )
-      ),
+            ],
+          )),
     );
   }
 
@@ -76,14 +75,11 @@ class PathingTile extends StatelessWidget {
 
       return Column(
         children: [
-          Row(
-              children: [
-                Text(entry.key, style: labelTextTheme),
-                Text(formattedTime, style: timeTextTheme)
-              ],
-              mainAxisAlignment: MainAxisAlignment.spaceBetween
-          ),
-          if(!isLast) Divider(color: dividerColor)
+          Row(children: [
+            Text(entry.key, style: labelTextTheme),
+            Text(formattedTime, style: timeTextTheme)
+          ], mainAxisAlignment: MainAxisAlignment.spaceBetween),
+          if (!isLast) Divider(color: dividerColor)
         ],
       );
     }).toList();
