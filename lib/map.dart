@@ -1,18 +1,14 @@
-enum AUMap {
-  SKELD,
-  POLUS,
-  MIRA
-}
+enum AUMap { SKELD, MIRA }
 
 extension AUMapName on AUMap {
   String getName() {
-    switch(this) {
+    switch (this) {
       case AUMap.SKELD:
         return 'The Skeld';
-      case AUMap.POLUS:
-        return 'Polus';
       case AUMap.MIRA:
         return 'Mira';
+      default:
+        return 'Unknown';
     }
   }
 }

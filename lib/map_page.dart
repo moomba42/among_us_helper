@@ -1,8 +1,10 @@
+import 'dart:math';
+
 import 'package:among_us_helper/map.dart';
 import 'package:among_us_helper/map_display.dart';
-import 'package:among_us_helper/player.dart';
 import 'package:among_us_helper/player_select.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_svg/flutter_svg.dart';
 import "package:photo_view/photo_view.dart";
 
 class MapPage extends StatefulWidget {
@@ -34,7 +36,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
           });
     _curveAnim = CurvedAnimation(parent: _animController, curve: Curves.easeInOut);
     _iconAnim = _curveAnim;
-    const mapEntriesHeight = APP_BAR_HEIGHT * 2;
+    double mapEntriesHeight = APP_BAR_HEIGHT * max(0, AUMap.values.length - 1);
     _menuItemsAnim = Tween<double>(begin: 0, end: mapEntriesHeight).animate(_curveAnim);
     _menuItemsAnimReverse = Tween<double>(begin: mapEntriesHeight, end: 0).animate(_curveAnim);
     super.initState();
@@ -43,7 +45,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var safePadding = MediaQuery.of(context).padding.top;
-    var assetImage = AssetImage("assets/maps/${_getSelectedMapLink()}.jpg");
+    var assetImage = SvgPicture.asset("assets/maps/${_getSelectedMapLink()}.svg");
 
     return Stack(
       children: [

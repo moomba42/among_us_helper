@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class MapDisplay extends StatefulWidget {
 
-  final ImageProvider mapImage;
+  final Widget mapImage;
 
   final List<PathingEntry> pathing;
 
@@ -23,7 +23,7 @@ class _MapDisplayState extends State<MapDisplay> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Image(image: widget.mapImage),
+        widget.mapImage,
         ...widget.pathing.map((e) => _buildPathingEntry(e)).toList(growable: false)
       ]
     );
