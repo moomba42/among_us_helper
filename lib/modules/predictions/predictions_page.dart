@@ -6,31 +6,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
 
-class NotesPage extends StatefulWidget {
+class PredictionsPage extends StatefulWidget {
   @override
-  _NotesPageState createState() => _NotesPageState();
+  _PredictionsPageState createState() => _PredictionsPageState();
 }
 
-enum NotesSection { SUS, INNOCENT, UNKNOWN, DEAD }
+enum PredictionsSection { SUS, INNOCENT, UNKNOWN, DEAD }
 
-enum NotesMenuActions { RESET }
+enum PredictionsMenuActions { RESET }
 
-class _NotesPageState extends State<NotesPage> {
+class _PredictionsPageState extends State<PredictionsPage> {
   List<dynamic> _notesList = [
-    NotesSection.SUS,
-    NotesSection.INNOCENT,
-    NotesSection.DEAD,
-    NotesSection.UNKNOWN,
+    PredictionsSection.SUS,
+    PredictionsSection.INNOCENT,
+    PredictionsSection.DEAD,
+    PredictionsSection.UNKNOWN,
     ...Player.values
   ];
 
   void _reset() {
     setState(() {
       _notesList = [
-        NotesSection.SUS,
-        NotesSection.INNOCENT,
-        NotesSection.DEAD,
-        NotesSection.UNKNOWN,
+        PredictionsSection.SUS,
+        PredictionsSection.INNOCENT,
+        PredictionsSection.DEAD,
+        PredictionsSection.UNKNOWN,
         ...Player.values
       ];
     });
@@ -42,7 +42,7 @@ class _NotesPageState extends State<NotesPage> {
 
   bool _reorderCallback(Key item, Key newPosition) {
     // Prevent reordering section headers
-    if (item is ValueKey && item.value is NotesSection) {
+    if (item is ValueKey && item.value is PredictionsSection) {
       return false;
     }
 
@@ -120,7 +120,7 @@ class _NotesPageState extends State<NotesPage> {
   Widget _buildListEntry(BuildContext context, int index) {
     dynamic entry = _notesList[index];
 
-    if (entry is NotesSection) {
+    if (entry is PredictionsSection) {
       return _buildHeader(context, entry);
     }
 
@@ -131,7 +131,7 @@ class _NotesPageState extends State<NotesPage> {
     throw "Invalid index";
   }
 
-  Widget _buildHeader(BuildContext context, NotesSection section) {
+  Widget _buildHeader(BuildContext context, PredictionsSection section) {
     var headline5 = Theme.of(context).textTheme.headline5.copyWith(color: Colors.black87);
     var label = section.toString().split('.')[1];
     label = label.substring(0, 1).toUpperCase() + label.substring(1).toLowerCase();

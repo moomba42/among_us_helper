@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:among_us_helper/modules/map/model/map.dart';
+import 'package:among_us_helper/core/model/au_map.dart';
 import 'package:among_us_helper/modules/map/map_display.dart';
 import 'package:among_us_helper/modules/map/player_select.dart';
 import "package:flutter/material.dart";
@@ -45,7 +45,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var safePadding = MediaQuery.of(context).padding.top;
-    var assetImage = SvgPicture.asset("assets/maps/${_getSelectedMapLink()}.svg");
+    var assetImage = SvgPicture.asset(_getSelectedMap().getSvgAsset());
 
     return Stack(
       children: [
@@ -205,10 +205,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   AUMap _getSelectedMap() {
     return _mapOptions[_selectedMap];
-  }
-
-  String _getSelectedMapLink() {
-    return _getSelectedMap().toString().split('.')[1].toLowerCase();
   }
 
   List<AUMap> _getNonSelectedMaps() {

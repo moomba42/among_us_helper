@@ -1,7 +1,7 @@
 import 'package:among_us_helper/core/icons.dart';
 import 'package:among_us_helper/modules/map/map_page.dart';
-import 'package:among_us_helper/modules/notes/notes_page.dart';
 import 'package:among_us_helper/modules/pathing/pathing_page.dart';
+import 'package:among_us_helper/modules/predictions/predictions_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -44,7 +44,8 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(CustomIcons.vector), label: 'Pathing'),
+          BottomNavigationBarItem(
+              icon: Icon(CustomIcons.vector), label: 'Pathing'),
           BottomNavigationBarItem(icon: Icon(Icons.edit), label: 'Notes'),
         ],
         currentIndex: _selectedTab,
@@ -54,7 +55,9 @@ class _MainPageState extends State<MainPage> {
         unselectedItemColor: Colors.white54,
       ),
       backgroundColor: Theme.of(context).canvasColor,
-      body: _selectedTab == 0 ? MapPage() : (_selectedTab == 1 ? PathingPage() : NotesPage()),
+      body: _selectedTab == 0
+          ? MapPage()
+          : (_selectedTab == 1 ? PathingPage() : PredictionsPage()),
     );
   }
 }
