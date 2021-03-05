@@ -1,8 +1,8 @@
-import 'package:among_us_helper/core/icons.dart';
-import 'package:among_us_helper/modules/map/map_page.dart';
-import 'package:among_us_helper/modules/pathing/pathing_page.dart';
-import 'package:among_us_helper/modules/predictions/predictions_page.dart';
-import 'package:flutter/material.dart';
+import "package:among_us_helper/core/icons.dart";
+import "package:among_us_helper/modules/map/map_page.dart";
+import "package:among_us_helper/modules/pathing/pathing_page.dart";
+import "package:among_us_helper/modules/predictions/predictions_page.dart";
+import "package:flutter/material.dart";
 
 void main() {
   runApp(AmongUsHelperApp());
@@ -13,7 +13,7 @@ class AmongUsHelperApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Among Us Helper',
+      title: "Among Us Helper",
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -43,10 +43,10 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Map"),
           BottomNavigationBarItem(
-              icon: Icon(CustomIcons.vector), label: 'Pathing'),
-          BottomNavigationBarItem(icon: Icon(Icons.edit), label: 'Notes'),
+              icon: Icon(CustomIcons.vector), label: "Pathing"),
+          BottomNavigationBarItem(icon: Icon(Icons.edit), label: "Notes"),
         ],
         currentIndex: _selectedTab,
         onTap: _onTabTapped,

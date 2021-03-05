@@ -1,6 +1,6 @@
-import 'package:among_us_helper/core/model/player.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import "package:among_us_helper/core/model/player.dart";
+import "package:flutter/material.dart";
+import "package:flutter/rendering.dart";
 
 class PlayerSelect extends StatefulWidget {
   final Function(List<Player>) onSelected;
@@ -76,17 +76,20 @@ class _PlayerSelectState extends State<PlayerSelect> {
 
     Color bgColor = player.getColor();
     bool isBright = bgColor.computeLuminance() > 0.5;
-    String name = player.toString().split('.')[1].toLowerCase();
+    String name = player.toString().split(".")[1].toLowerCase();
     String camelName = name.substring(0, 1).toUpperCase() + name.substring(1);
     Color textColor = isBright ? Colors.black87 : Colors.white;
 
-    var button = RaisedButton(
-      elevation: selected ? 4 : null,
+    var button = ElevatedButton(
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.all(selected ? 4 : null),
+        backgroundColor: MaterialStateProperty.all(player.getColor()),
+        padding: MaterialStateProperty.all(EdgeInsets.zero),
+        shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+        animationDuration: Duration(milliseconds: 200)
+      ),
       onPressed: () => _onPlayerToggle(player),
-      color: player.getColor(),
-      padding: EdgeInsets.zero,
-      animationDuration: Duration(milliseconds: 200),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Stack(children: [
         Positioned(
             left: -30,
@@ -134,10 +137,13 @@ class _PlayerSelectState extends State<PlayerSelect> {
   }
 
   Widget _buildSubmitButton({Function onPressed, String label, IconData icon}) {
-    return RaisedButton(
+    return ElevatedButton(
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 18)),
+        // TODO: Check if this is needed with the new API
+        backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor)
+      ),
       onPressed: onPressed,
-      padding: EdgeInsets.symmetric(vertical: 18),
-      color: Theme.of(context).primaryColor,
       child: Stack(
         children: [
           Positioned(left: 30, child: Icon(icon, color: Theme.of(context).primaryIconTheme.color)),

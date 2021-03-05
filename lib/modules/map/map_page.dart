@@ -1,10 +1,10 @@
-import 'dart:math';
+import "dart:math";
 
-import 'package:among_us_helper/core/model/au_map.dart';
-import 'package:among_us_helper/modules/map/map_display.dart';
-import 'package:among_us_helper/modules/map/player_select.dart';
+import "package:among_us_helper/core/model/au_map.dart";
+import "package:among_us_helper/modules/map/map_display.dart";
+import "package:among_us_helper/modules/map/player_select.dart";
 import "package:flutter/material.dart";
-import 'package:flutter_svg/flutter_svg.dart';
+import "package:flutter_svg/flutter_svg.dart";
 import "package:photo_view/photo_view.dart";
 
 class MapPage extends StatefulWidget {
@@ -126,7 +126,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
     var imageSize = Offset(1280, 719);
 
-    // Get the click position in image pixels, relative to the image's top left corner.
+    // Get the click position in image pixels, relative to the image"s top left corner.
     var clickOnImage = (imageSize / 2) - clickPos;
 
     _onMapClicked(clickOnImage);

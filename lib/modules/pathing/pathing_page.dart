@@ -1,5 +1,5 @@
-import 'package:among_us_helper/modules/pathing/pathing_item.dart';
-import 'package:flutter/material.dart';
+import "package:among_us_helper/modules/pathing/pathing_item.dart";
+import "package:flutter/material.dart";
 
 class PathingPage extends StatefulWidget {
   @override
@@ -17,10 +17,10 @@ class _PathingPageState extends State<PathingPage> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Text('Pathing', style: headline3),
+            child: Text("Pathing", style: headline3),
           ),
           PathingTile(
-            label: 'Brown',
+            label: "Brown",
             icon: Image(
                 image: AssetImage("assets/players/brown.png"),
                 isAntiAlias: true,
@@ -35,7 +35,7 @@ class _PathingPageState extends State<PathingPage> {
             },
           ),
           PathingTile(
-            label: 'Red',
+            label: "Red",
             icon: Image(
                 image: AssetImage("assets/players/red.png"),
                 isAntiAlias: true,
@@ -45,7 +45,7 @@ class _PathingPageState extends State<PathingPage> {
             pathing: Map.identity(),
           ),
           PathingTile(
-            label: 'White',
+            label: "White",
             icon: Image(
                 image: AssetImage("assets/players/white.png"),
                 isAntiAlias: true,

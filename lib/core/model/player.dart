@@ -1,5 +1,6 @@
-import 'dart:ui';
+import "dart:ui";
 
+/// Used to enumerate all Player types that are available in AmongUs.
 enum Player {
   BROWN,
   RED,
@@ -15,6 +16,7 @@ enum Player {
   BLACK,
 }
 
+/// Provides color information for each player enumeration.
 extension PlayerColor on Player {
   Color getColor() {
     switch (this) {

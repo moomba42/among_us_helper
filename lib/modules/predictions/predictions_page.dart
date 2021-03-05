@@ -1,17 +1,18 @@
-import 'dart:io';
+import "dart:io";
 
-import 'package:among_us_helper/core/model/player.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_reorderable_list/flutter_reorderable_list.dart';
+import "package:among_us_helper/core/model/player.dart";
+import "package:among_us_helper/modules/predictions/model/predictions.dart";
+import "package:flutter/foundation.dart";
+import "package:flutter/material.dart";
+import "package:flutter/rendering.dart";
+
+// TODO: Use the new, built-in flutter re-orderable list instead.
+import "package:flutter_reorderable_list/flutter_reorderable_list.dart" as RLExt;
 
 class PredictionsPage extends StatefulWidget {
   @override
   _PredictionsPageState createState() => _PredictionsPageState();
 }
-
-enum PredictionsSection { SUS, INNOCENT, UNKNOWN, DEAD }
 
 enum PredictionsMenuActions { RESET }
 
@@ -67,9 +68,9 @@ class _PredictionsPageState extends State<PredictionsPage> {
     var headline3 = Theme.of(context).textTheme.headline3.copyWith(color: Colors.black87);
 
     return SafeArea(
-        child: ReorderableList(
+        child: RLExt.ReorderableList(
       decoratePlaceholder: (widget, opacity) {
-        return DecoratedPlaceholder(offset: 0, widget: widget);
+        return RLExt.DecoratedPlaceholder(offset: 0, widget: widget);
       },
       onReorderDone: (item) {},
       onReorder: _reorderCallback,
@@ -83,7 +84,7 @@ class _PredictionsPageState extends State<PredictionsPage> {
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Notes', style: headline3),
+                  Text("Notes", style: headline3),
                   // FlatButton(onPressed: () {}, child: Text("New Round"))
                   Row(
                     children: [
@@ -133,10 +134,10 @@ class _PredictionsPageState extends State<PredictionsPage> {
 
   Widget _buildHeader(BuildContext context, PredictionsSection section) {
     var headline5 = Theme.of(context).textTheme.headline5.copyWith(color: Colors.black87);
-    var label = section.toString().split('.')[1];
+    var label = section.toString().split(".")[1];
     label = label.substring(0, 1).toUpperCase() + label.substring(1).toLowerCase();
 
-    return ReorderableItem(
+    return RLExt.ReorderableItem(
       key: ValueKey(section),
       childBuilder: (context, state) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -148,27 +149,27 @@ class _PredictionsPageState extends State<PredictionsPage> {
   Widget _buildEntry(BuildContext context, Player player) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4),
-      child: ReorderableItem(
+      child: RLExt.ReorderableItem(
         key: ValueKey(player),
         childBuilder: (context, state) => _buildEntryContent(context, state, player),
       ),
     );
   }
 
-  Widget _buildEntryContent(BuildContext context, ReorderableItemState state, Player player) {
-    if (state == ReorderableItemState.placeholder) {
+  Widget _buildEntryContent(BuildContext context, RLExt.ReorderableItemState state, Player player) {
+    if (state == RLExt.ReorderableItemState.placeholder) {
       return SizedBox(height: 56);
     }
 
     Color bgColor = player.getColor();
     bool isBright = bgColor.computeLuminance() > 0.5;
-    String name = player.toString().split('.')[1].toLowerCase();
+    String name = player.toString().split(".")[1].toLowerCase();
     String camelName = name.substring(0, 1).toUpperCase() + name.substring(1);
     Color textColor = isBright ? Colors.black87 : Colors.white;
 
     Widget content = Material(
         borderRadius: BorderRadius.circular(4),
-        elevation: state == ReorderableItemState.dragProxy ? 8 : 2,
+        elevation: state == RLExt.ReorderableItemState.dragProxy ? 8 : 2,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         child: ListTile(
           mouseCursor: SystemMouseCursors.grab,
@@ -193,7 +194,7 @@ class _PredictionsPageState extends State<PredictionsPage> {
         !Platform.isLinux;
 
     if (isMobile) {
-      // Add a drag handle at the end of the tile. It's here to allow for a bigger tap target.
+      // Add a drag handle at the end of the tile. It"s here to allow for a bigger tap target.
       content = Stack(
         clipBehavior: Clip.none,
         children: [
@@ -206,13 +207,13 @@ class _PredictionsPageState extends State<PredictionsPage> {
           Positioned(
             right: 0,
             top: 0,
-            child: ReorderableListener(
+            child: RLExt.ReorderableListener(
                 child: Container(width: 56, height: 56, color: Colors.transparent)),
           ),
         ],
       );
     } else {
-      content = ReorderableListener(
+      content = RLExt.ReorderableListener(
         child: content,
       );
     }

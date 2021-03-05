@@ -1,6 +1,7 @@
-import 'dart:ui';
+import "dart:ui";
 
-import 'package:flutter/material.dart';
+import "package:among_us_helper/core/ui_functions.dart";
+import "package:flutter/material.dart";
 
 class PathingTile extends StatelessWidget {
   final String label;
@@ -39,13 +40,22 @@ class PathingTile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    OutlineButton.icon(
-                        textColor: textColor,
-                        hoverColor: textColor.withOpacity(0.1),
-                        highlightedBorderColor: textColor,
-                        visualDensity: VisualDensity.standard,
+                    OutlinedButton.icon(
+                        style: ButtonStyle(
+                            foregroundColor: MaterialStateProperty.all(textColor),
+                            overlayColor: MaterialStateProperty.all(textColor.withOpacity(0.1)),
+                            visualDensity: VisualDensity.standard,
+                            side: materialProperty(
+                                forStates: [
+                                  MaterialState.hovered,
+                                  MaterialState.focused,
+                                  MaterialState.pressed,
+                                  MaterialState.selected
+                                ],
+                                ifContains: BorderSide(color: textColor),
+                                ifNot: BorderSide(color: textColor.withOpacity(0.1)))),
                         onPressed: () {},
-                        label: Text('SHOW ON MAP'),
+                        label: Text("SHOW ON MAP"),
                         icon: Icon(Icons.arrow_forward))
                   ],
                 )
@@ -70,7 +80,7 @@ class PathingTile extends StatelessWidget {
     var timeTextTheme = labelTextTheme.copyWith(fontFeatures: [FontFeature.tabularFigures()]);
 
     var entries = pathing.entries.map((entry) {
-      var formattedTime = '${formatTime(entry.value)}';
+      var formattedTime = "${formatTime(entry.value)}";
       bool isLast = pathing.entries.last.value == entry.value;
 
       return Column(
@@ -93,7 +103,7 @@ class PathingTile extends StatelessWidget {
     Duration duration = Duration(milliseconds: time.round());
 
     return [duration.inMinutes, duration.inSeconds]
-        .map((seg) => seg.remainder(60).toString().padLeft(2, '0'))
-        .join(':');
+        .map((seg) => seg.remainder(60).toString().padLeft(2, "0"))
+        .join(":");
   }
 }

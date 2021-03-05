@@ -1,5 +1,5 @@
-import 'package:among_us_helper/core/model/player.dart';
-import 'package:flutter/material.dart';
+import "package:among_us_helper/core/model/player.dart";
+import "package:flutter/material.dart";
 
 class MapDisplay extends StatefulWidget {
   final Widget mapImage;
@@ -48,7 +48,7 @@ class _MapDisplayState extends State<MapDisplay> {
   }
 
   Widget _buildPlayer(Player player) {
-    String name = player.toString().split('.')[1].toLowerCase();
+    String name = player.toString().split(".")[1].toLowerCase();
     return SizedBox(
         width: 30,
         height: 40,
