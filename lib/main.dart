@@ -2,7 +2,9 @@ import "package:among_us_helper/core/icons.dart";
 import "package:among_us_helper/modules/map/map_page.dart";
 import "package:among_us_helper/modules/pathing/pathing_page.dart";
 import "package:among_us_helper/modules/predictions/predictions_page.dart";
+import "package:among_us_helper/modules/predictions/repositories/predictions_repository.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 void main() {
   runApp(AmongUsHelperApp());
@@ -55,9 +57,27 @@ class _MainPageState extends State<MainPage> {
         unselectedItemColor: Colors.white54,
       ),
       backgroundColor: Theme.of(context).canvasColor,
-      body: _selectedTab == 0
-          ? MapPage()
-          : (_selectedTab == 1 ? PathingPage() : PredictionsPage()),
+      body: MultiRepositoryProvider(
+          providers: _getRepositoryProviders(),
+          child: _buildPage(context)
+      ),
     );
+  }
+
+  /// Builds a list of repositories to inject into the app
+  List<RepositoryProvider> _getRepositoryProviders() {
+    return [
+      RepositoryProvider<PredictionsRepository>(
+        create: (BuildContext context) => PredictionsRepository(),
+      )
+    ];
+  }
+
+  Widget _buildPage(BuildContext context) {
+    switch(_selectedTab) {
+      case 2: return PredictionsPage();
+      case 1: return PathingPage();
+      default: return MapPage();
+    }
   }
 }
