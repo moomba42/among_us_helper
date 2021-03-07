@@ -1,7 +1,7 @@
 import "package:among_us_helper/core/icons.dart";
 import "package:among_us_helper/modules/map/map_page.dart";
 import "package:among_us_helper/modules/pathing/pathing_page.dart";
-import "package:among_us_helper/modules/player_names/repositories/player_names_repository.dart";
+import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
 import "package:among_us_helper/modules/predictions/predictions_page.dart";
 import "package:among_us_helper/modules/predictions/repositories/predictions_repository.dart";
 import "package:flutter/material.dart";
@@ -33,8 +33,8 @@ class AmongUsHelperApp extends StatelessWidget {
       RepositoryProvider<PredictionsRepository>(
         create: (BuildContext context) => PredictionsRepository(),
       ),
-      RepositoryProvider<PlayerNamesRepository>(
-        create: (BuildContext context) => PlayerNamesRepository(),
+      RepositoryProvider<PlayerConfigRepository>(
+        create: (BuildContext context) => PlayerConfigRepository(),
       )
     ];
   }

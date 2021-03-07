@@ -1,12 +1,12 @@
 import "package:among_us_helper/core/model/player.dart";
 import "package:rxdart/subjects.dart";
 
-class PlayerNamesRepository {
+class PlayerConfigRepository {
   // TODO: Replace with data store.
   /// Placeholder local cache.
   final BehaviorSubject<Map<Player, String>> _playerNames;
 
-  PlayerNamesRepository()
+  PlayerConfigRepository()
       : this._playerNames = BehaviorSubject.seeded(
             Map.fromIterable(Player.values, key: (player) => player, value: (player) => ""));
 

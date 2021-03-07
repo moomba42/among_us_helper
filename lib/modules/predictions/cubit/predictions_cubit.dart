@@ -1,7 +1,7 @@
 import "dart:async";
 
 import "package:among_us_helper/core/model/player.dart";
-import "package:among_us_helper/modules/player_names/repositories/player_names_repository.dart";
+import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
 import "package:among_us_helper/modules/predictions/model/predictions.dart";
 import "package:among_us_helper/modules/predictions/repositories/predictions_repository.dart";
 import "package:bloc/bloc.dart";
@@ -14,13 +14,13 @@ part "predictions_state.dart";
 class PredictionsCubit extends Cubit<PredictionsState> {
   final Logger _logger = Logger("PredictionsCubit");
   final PredictionsRepository _predictionsRepository;
-  final PlayerNamesRepository _playerNamesRepository;
+  final PlayerConfigRepository _playerNamesRepository;
 
   StreamSubscription<PredictionsLoadSuccess> _repositoriesSubscription;
 
   PredictionsCubit(
       {@required PredictionsRepository predictionsRepository,
-      @required PlayerNamesRepository playerNamesRepository})
+      @required PlayerConfigRepository playerNamesRepository})
       : this._predictionsRepository = predictionsRepository,
         this._playerNamesRepository = playerNamesRepository,
         super(PredictionsInitial()) {

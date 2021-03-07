@@ -1,4 +1,4 @@
-import 'package:among_us_helper/modules/player_names/repositories/player_names_repository.dart';
+import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
 import "package:among_us_helper/modules/predictions/cubit/predictions_cubit.dart";
 import "package:among_us_helper/modules/predictions/predictions_view.dart";
 import "package:among_us_helper/modules/predictions/repositories/predictions_repository.dart";
@@ -11,7 +11,7 @@ class PredictionsPage extends StatelessWidget {
     return BlocProvider(
         create: (BuildContext context) => PredictionsCubit(
               predictionsRepository: context.read<PredictionsRepository>(),
-              playerNamesRepository: context.read<PlayerNamesRepository>(),
+              playerNamesRepository: context.read<PlayerConfigRepository>(),
             ),
         child: PredictionsView());
   }

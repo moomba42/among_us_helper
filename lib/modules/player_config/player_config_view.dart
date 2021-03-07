@@ -1,7 +1,7 @@
 import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/core/widgets/submit_button.dart";
 import "package:among_us_helper/core/widgets/title_bar.dart";
-import "package:among_us_helper/modules/player_names/cubit/player_names_cubit.dart";
+import "package:among_us_helper/modules/player_config/cubit/player_config_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -38,7 +38,7 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
       value: (player) => TextEditingController(),
     );
 
-    PlayerNamesCubit boundCubit = context.read<PlayerNamesCubit>();
+    PlayerConfigCubit boundCubit = context.read<PlayerConfigCubit>();
     boundCubit.listen(_applyStateToNameInputs);
     boundCubit.fetch();
 
@@ -138,12 +138,12 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
 
   /// Takes the given cubit [state] and overwrites an input's value if its different.
   /// This check is to prevent unnecessary widget rebuilds.
-  void _applyStateToNameInputs(PlayerNamesState state) {
-    if (state is! PlayerNamesLoadSuccess) {
+  void _applyStateToNameInputs(PlayerConfigState state) {
+    if (state is! PlayerConfigLoadSuccess) {
       return;
     }
 
-    PlayerNamesLoadSuccess stateSuccess = state;
+    PlayerConfigLoadSuccess stateSuccess = state;
     stateSuccess.playerNames.forEach((Player player, String name) {
       if (_nameControllers[player].text != name) {
         _nameControllers[player].text = name;
@@ -160,13 +160,13 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
         _formDirty = true;
       });
     }
-    context.read<PlayerNamesCubit>().change(player: player, name: newValue);
+    context.read<PlayerConfigCubit>().change(player: player, name: newValue);
   }
 
   /// Handles the title bar's reset icon button press.
   /// Forwards the action to the cubit.
   void _onResetPressed() {
-    context.read<PlayerNamesCubit>().reset();
+    context.read<PlayerConfigCubit>().reset();
   }
 
   /// Handles the title bar's back button press.
@@ -178,7 +178,7 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
   /// Handles the submit button press.
   /// Forwards the action to the cubit, leaves this screen and goes back.
   void _onSubmit() {
-    context.read<PlayerNamesCubit>().submit();
+    context.read<PlayerConfigCubit>().submit();
     Navigator.of(context).pop();
   }
 }
