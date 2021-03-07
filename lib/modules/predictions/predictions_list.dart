@@ -230,9 +230,8 @@ class _Entry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color bgColor = _player.getColor();
+    String playerName = _player.toString().split(".")[1].toLowerCase();
     bool isBright = bgColor.computeLuminance() > 0.5;
-    String name = _player.toString().split(".")[1].toLowerCase();
-    String camelName = name.substring(0, 1).toUpperCase() + name.substring(1);
     Color textColor = isBright ? Colors.black87 : Colors.white;
 
     Widget content = Material(
@@ -245,7 +244,7 @@ class _Entry extends StatelessWidget {
           leading: SizedBox(
             height: 40,
             child: Image(
-                image: AssetImage("assets/players/$name.png"),
+                image: AssetImage("assets/players/$playerName.png"),
                 isAntiAlias: true,
                 filterQuality: FilterQuality.high),
           ),
@@ -253,9 +252,9 @@ class _Entry extends StatelessWidget {
           trailing: SizedBox(
             width: 24,
           ),
-          title: Text(
-            camelName,
-            style: TextStyle(color: textColor),
+          title: BlocBuilder<PredictionsCubit, PredictionsState>(
+            builder: (BuildContext context, PredictionsState state) =>
+                _buildLabel(context, state, textColor),
           ),
           tileColor: bgColor,
         ));
@@ -297,6 +296,32 @@ class _Entry extends StatelessWidget {
     }
 
     return content;
+  }
+
+  /// Builds an appropriate label based on the given [state].
+  /// Sets the color to the given [textColor].
+  Widget _buildLabel(BuildContext context, PredictionsState state, Color textColor) {
+    String label;
+
+    // If the predictions have been loaded, then look up the player's name.
+    if (state is PredictionsLoadSuccess) {
+      PredictionsLoadSuccess stateSuccess = state;
+      label = stateSuccess.names[_player];
+    } else {
+      label = "Loading...";
+    }
+
+    // If the player name is empty then substitute it with the enumerated name.
+    if (label.isEmpty) {
+      label = _player.toString().split(".")[1].toLowerCase();
+      label = label.substring(0, 1).toUpperCase() + label.substring(1);
+    }
+
+    // Return a text widget to represent the label.
+    return Text(
+      label,
+      style: TextStyle(color: textColor),
+    );
   }
 }
 

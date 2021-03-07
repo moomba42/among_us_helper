@@ -1,4 +1,5 @@
 import "package:among_us_helper/core/model/player.dart";
+import "package:among_us_helper/core/widgets/submit_button.dart";
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
 
@@ -62,10 +63,10 @@ class _PlayerSelectState extends State<PlayerSelect> {
                 .map((entry) => _buildPlayerOption(entry.key, entry.value))
                 .toList(growable: false),
           ),
-          _buildSubmitButton(
+          SubmitButton(
               onPressed: _isAnythingSelected() ? _onSubmit : null,
               label: "Confirm Positions",
-              icon: Icons.check_circle)
+              leadingIcon: Icons.check_circle)
         ],
       ),
     );
@@ -133,23 +134,6 @@ class _PlayerSelectState extends State<PlayerSelect> {
           decoration: ShapeDecoration(
               color: Colors.black38,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)))),
-    );
-  }
-
-  Widget _buildSubmitButton({Function onPressed, String label, IconData icon}) {
-    return ElevatedButton(
-      style: ButtonStyle(
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 18)),
-        // TODO: Check if this is needed with the new API
-        backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor)
-      ),
-      onPressed: onPressed,
-      child: Stack(
-        children: [
-          Positioned(left: 30, child: Icon(icon, color: Theme.of(context).primaryIconTheme.color)),
-          Center(child: Text(label, style: Theme.of(context).primaryTextTheme.headline6))
-        ],
-      ),
     );
   }
 }

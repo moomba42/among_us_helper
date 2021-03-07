@@ -7,18 +7,31 @@ class PredictionsRepository {
   /// Placeholder local cache.
   final BehaviorSubject<Map<PredictionsSection, List<Player>>> _predictions;
 
-  PredictionsRepository(): this._predictions = new BehaviorSubject();
+  PredictionsRepository()
+      : this._predictions = BehaviorSubject.seeded(_generateInitialPredictions());
 
-  Stream<Map<PredictionsSection, List<Player>>> predictionsMap() => _predictions.stream;
+  Stream<Map<PredictionsSection, List<Player>>> get predictionsMap => _predictions.stream;
 
   void update(Map<PredictionsSection, List<Player>> updatedPredictions) {
-    // Duplicate
-    Map<PredictionsSection, List<Player>> duplicate = Map.of(_predictions.valueWrapper.value);
+    Map<PredictionsSection, List<Player>> newMap = Map.identity();
+
+    // Duplicate current data into new map
+    if (_predictions.valueWrapper != null) {
+      newMap.addAll(_predictions.valueWrapper.value);
+    }
 
     // Overwrite
-    duplicate.addAll(updatedPredictions);
+    newMap.addAll(updatedPredictions);
 
     // Push changes
-    _predictions.add(duplicate);
+    _predictions.add(newMap);
+  }
+
+  /// Generates an initial state of predictions.
+  static Map<PredictionsSection, List<Player>> _generateInitialPredictions() {
+    Map<PredictionsSection, List<Player>> initialData = Map.fromIterable(PredictionsSection.values,
+        key: (section) => section, value: (section) => []);
+    initialData[PredictionsSection.UNKNOWN].addAll(Player.values);
+    return initialData;
   }
 }

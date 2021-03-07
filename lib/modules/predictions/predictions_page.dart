@@ -1,3 +1,4 @@
+import 'package:among_us_helper/modules/player_names/repositories/player_names_repository.dart';
 import "package:among_us_helper/modules/predictions/cubit/predictions_cubit.dart";
 import "package:among_us_helper/modules/predictions/predictions_view.dart";
 import "package:among_us_helper/modules/predictions/repositories/predictions_repository.dart";
@@ -8,8 +9,10 @@ class PredictionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (BuildContext context) =>
-            PredictionsCubit(predictionsRepository: context.read<PredictionsRepository>()),
+        create: (BuildContext context) => PredictionsCubit(
+              predictionsRepository: context.read<PredictionsRepository>(),
+              playerNamesRepository: context.read<PlayerNamesRepository>(),
+            ),
         child: PredictionsView());
   }
 }
