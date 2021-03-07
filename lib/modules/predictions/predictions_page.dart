@@ -11,7 +11,7 @@ class PredictionsPage extends StatelessWidget {
     return BlocProvider(
         create: (BuildContext context) => PredictionsCubit(
               predictionsRepository: context.read<PredictionsRepository>(),
-              playerNamesRepository: context.read<PlayerConfigRepository>(),
+              playerConfigRepository: context.read<PlayerConfigRepository>(),
             ),
         child: PredictionsView());
   }

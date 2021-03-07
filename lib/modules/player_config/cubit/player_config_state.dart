@@ -6,8 +6,8 @@ abstract class PlayerConfigState {}
 class PlayerConfigInitial extends PlayerConfigState {}
 
 class PlayerConfigLoadSuccess extends PlayerConfigState {
-  // TODO: Use PlayerNames type alias after dart adds the feature.
   final Map<Player, String> playerNames;
+  final Map<Player, bool> playerEnables;
 
-  PlayerConfigLoadSuccess(this.playerNames);
+  PlayerConfigLoadSuccess(this.playerNames, this.playerEnables);
 }

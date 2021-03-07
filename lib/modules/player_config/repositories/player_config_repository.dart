@@ -1,29 +1,34 @@
 import "package:among_us_helper/core/model/player.dart";
+import "package:among_us_helper/core/model/player_config.dart";
 import "package:rxdart/subjects.dart";
 
 class PlayerConfigRepository {
   // TODO: Replace with data store.
   /// Placeholder local cache.
-  final BehaviorSubject<Map<Player, String>> _playerNames;
+  final BehaviorSubject<List<PlayerConfig>> _playerConfigs;
 
   PlayerConfigRepository()
-      : this._playerNames = BehaviorSubject.seeded(
-            Map.fromIterable(Player.values, key: (player) => player, value: (player) => ""));
+      : this._playerConfigs = BehaviorSubject.seeded(
+            Player.values.map((Player player) => PlayerConfig(player, "", true)).toList());
 
-  Stream<Map<Player, String>> get playerNames => _playerNames.stream;
+  Stream<List<PlayerConfig>> get playerConfigs => _playerConfigs.stream;
 
-  void update(Map<Player, String> updatedNames) {
-    Map<Player, String> newMap = Map.identity();
+  void update(List<PlayerConfig> updatedConfigs) {
+    List<PlayerConfig> newMap = [];
 
     // Duplicate current data into new map
-    if (_playerNames.valueWrapper != null) {
-      newMap.addAll(_playerNames.valueWrapper.value);
+    if (_playerConfigs.valueWrapper != null) {
+      newMap.addAll(_playerConfigs.valueWrapper.value);
     }
 
-    // Overwrite
-    newMap.addAll(updatedNames);
+    // Remove duplicates
+    newMap.removeWhere((PlayerConfig left) =>
+        updatedConfigs.any((PlayerConfig right) => left.player == right.player));
+
+    // Add new entries
+    newMap.addAll(updatedConfigs);
 
     // Push changes
-    _playerNames.add(newMap);
+    _playerConfigs.add(newMap);
   }
 }

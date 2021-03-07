@@ -1,4 +1,5 @@
 import "package:among_us_helper/core/model/player.dart";
+import "package:among_us_helper/core/model/player_config.dart";
 import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
 import "package:bloc/bloc.dart";
 import "package:logging/logging.dart";
@@ -17,8 +18,18 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
   /// Fetches a single, current map of the player names from the repository,
   /// and commits them as a state.
   void fetch() {
-    _playerConfigRepository.playerNames.take(1).listen((Map<Player, String> value) {
-      emit(PlayerConfigLoadSuccess(value));
+    _playerConfigRepository.playerConfigs.take(1).listen((List<PlayerConfig> value) {
+      Map<Player, String> names = Map.fromIterable(
+        value,
+        key: (config) => config.player,
+        value: (config) => config.name,
+      );
+      Map<Player, bool> enables = Map.fromIterable(
+        value,
+        key: (config) => config.player,
+        value: (config) => config.enabled,
+      );
+      emit(PlayerConfigLoadSuccess(names, enables));
     }).onError((error, stackTrace) {
       _logger.severe("Could not fetch player config", error, stackTrace);
     });
@@ -26,7 +37,7 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
 
   /// Changes a given [player]'s name to the given [name].
   /// Does not commit the change to the repository, but emits an updated state.
-  void change({@required Player player, @required String name}) {
+  void updatePlayerName({@required Player player, @required String name}) {
     if (state is! PlayerConfigLoadSuccess) {
       _logger.warning("No player config data. Could not modify state.");
       return;
@@ -40,7 +51,30 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
     // Move the player to the desired section
     newPlayerNames[player] = name;
 
-    emit(PlayerConfigLoadSuccess(newPlayerNames));
+    // Also copy over the enables, but dont modify them.
+    Map<Player, bool> newPlayerEnables = Map.of(successState.playerEnables);
+
+    emit(PlayerConfigLoadSuccess(newPlayerNames, newPlayerEnables));
+  }
+
+  void updatePlayerEnabled({@required Player player, @required bool enabled}) {
+    if (state is! PlayerConfigLoadSuccess) {
+      _logger.warning("No player config data. Could not modify state.");
+      return;
+    }
+
+    PlayerConfigLoadSuccess successState = state;
+
+    // Copy the original predictions
+    Map<Player, bool> newPlayerEnables = Map.of(successState.playerEnables);
+
+    // Move the player to the desired section
+    newPlayerEnables[player] = enabled;
+
+    // Also copy over the enables, but dont modify them.
+    Map<Player, String> newPlayerNames = Map.of(successState.playerNames);
+
+    emit(PlayerConfigLoadSuccess(newPlayerNames, newPlayerEnables));
   }
 
   /// Resets all the player names to empty strings.
@@ -48,8 +82,10 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
   void reset() {
     Map<Player, String> emptyPlayerNames =
         Map.fromEntries(Player.values.map((Player player) => MapEntry(player, "")));
+    Map<Player, bool> enabledPlayers =
+        Map.fromEntries(Player.values.map((Player player) => MapEntry(player, true)));
 
-    emit(PlayerConfigLoadSuccess(emptyPlayerNames));
+    emit(PlayerConfigLoadSuccess(emptyPlayerNames, enabledPlayers));
   }
 
   /// Commits the current state to the repository.
@@ -60,6 +96,11 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
     }
 
     PlayerConfigLoadSuccess stateSuccess = state;
-    _playerConfigRepository.update(stateSuccess.playerNames);
+    List<PlayerConfig> playerConfigs = Player.values.map((Player player) {
+      String name = stateSuccess.playerNames[player];
+      bool enabled = stateSuccess.playerEnables[player];
+      return PlayerConfig(player, name, enabled);
+    }).toList();
+    _playerConfigRepository.update(playerConfigs);
   }
 }

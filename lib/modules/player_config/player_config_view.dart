@@ -11,7 +11,6 @@ class PlayerNamesView extends StatefulWidget {
 }
 
 class _PlayerNamesViewState extends State<PlayerNamesView> {
-
   /// Internal padding of the list of player names.
   static const double _LIST_PADDING = 6;
 
@@ -96,26 +95,47 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
           Divider(height: _LIST_DIVIDER_HEIGHT, indent: 69),
       itemBuilder: (BuildContext context, int index) {
         Player player = Player.values[index];
-        return ListTile(
-          title: SizedBox(
-            height: _LIST_ELEMENT_HEIGHT,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: TextFormField(
-                controller: _nameControllers[player],
-                onChanged: (String newValue) => _onPlayerNameInput(player, newValue),
-                decoration: InputDecoration(
-                  hintText: "Player $index",
-                  border: InputBorder.none,
+        return BlocBuilder<PlayerConfigCubit, PlayerConfigState>(
+          buildWhen: (PlayerConfigState previous, PlayerConfigState next) {
+            if ((previous is PlayerConfigLoadSuccess) && (next is PlayerConfigLoadSuccess)) {
+              PlayerConfigLoadSuccess previousSuccess = previous;
+              PlayerConfigLoadSuccess nextSuccess = next;
+              if (previousSuccess.playerEnables[player] == nextSuccess.playerEnables[player]) {
+                return false;
+              }
+            }
+            return true;
+          },
+          builder: (BuildContext context, PlayerConfigState state) {
+            bool loaded = (state is PlayerConfigLoadSuccess);
+            bool enabled = (state is PlayerConfigLoadSuccess) && state.playerEnables[player];
+
+            return ListTile(
+              title: SizedBox(
+                height: _LIST_ELEMENT_HEIGHT,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextFormField(
+                    enabled: enabled,
+                    controller: _nameControllers[player],
+                    onChanged: (String newValue) => _onPlayerNameInput(player, newValue),
+                    decoration: InputDecoration(
+                      hintText: "Player $index",
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          leading: _getImageForPlayer(player),
-          trailing: Checkbox(
-            value: true,
-            onChanged: (bool newValue) {},
-          ),
+              leading: Opacity(
+                child: _getImageForPlayer(player),
+                opacity: enabled ? 1 : 0.38,
+              ),
+              trailing: Checkbox(
+                value: enabled,
+                onChanged: loaded ? (bool newValue) => _onPlayerToggle(player, newValue) : null,
+              ),
+            );
+          },
         );
       },
     );
@@ -155,17 +175,31 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
   /// Marks the form as dirty if not marked already,
   /// and sends the [newValue] to the cubit.
   void _onPlayerNameInput(Player player, String newValue) {
+    _markAsDirty();
+    context.read<PlayerConfigCubit>().updatePlayerName(player: player, name: newValue);
+  }
+
+  /// Handles the input event on a [player] enabled checkbox.
+  /// Marks the form as dirty if not marked already,
+  /// and sends the [newValue] to the cubit.
+  void _onPlayerToggle(Player player, bool newValue) {
+    _markAsDirty();
+    context.read<PlayerConfigCubit>().updatePlayerEnabled(player: player, enabled: newValue);
+  }
+
+  /// Marks this form as dirty and triggers a rebuild if necessary.
+  void _markAsDirty() {
     if (!_formDirty) {
       setState(() {
         _formDirty = true;
       });
     }
-    context.read<PlayerConfigCubit>().change(player: player, name: newValue);
   }
 
   /// Handles the title bar's reset icon button press.
   /// Forwards the action to the cubit.
   void _onResetPressed() {
+    _markAsDirty();
     context.read<PlayerConfigCubit>().reset();
   }
 

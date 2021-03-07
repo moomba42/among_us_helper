@@ -1,34 +1,47 @@
 import "dart:async";
 
 import "package:among_us_helper/core/model/player.dart";
+import "package:among_us_helper/core/model/player_config.dart";
 import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
 import "package:among_us_helper/modules/predictions/model/predictions.dart";
 import "package:among_us_helper/modules/predictions/repositories/predictions_repository.dart";
 import "package:bloc/bloc.dart";
 import "package:logging/logging.dart";
 import "package:meta/meta.dart";
-import 'package:rxdart/rxdart.dart';
+import "package:rxdart/rxdart.dart";
 
 part "predictions_state.dart";
 
 class PredictionsCubit extends Cubit<PredictionsState> {
   final Logger _logger = Logger("PredictionsCubit");
   final PredictionsRepository _predictionsRepository;
-  final PlayerConfigRepository _playerNamesRepository;
+  final PlayerConfigRepository _playerConfigRepository;
 
   StreamSubscription<PredictionsLoadSuccess> _repositoriesSubscription;
 
   PredictionsCubit(
       {@required PredictionsRepository predictionsRepository,
-      @required PlayerConfigRepository playerNamesRepository})
+      @required PlayerConfigRepository playerConfigRepository})
       : this._predictionsRepository = predictionsRepository,
-        this._playerNamesRepository = playerNamesRepository,
+        this._playerConfigRepository = playerConfigRepository,
         super(PredictionsInitial()) {
-    Stream<Map<PredictionsSection, List<Player>>> predictions =
+    Stream<Map<PredictionsSection, List<Player>>> predictionsStream =
         _predictionsRepository.predictionsMap;
-    Stream<Map<Player, String>> names = _playerNamesRepository.playerNames;
+    Stream<List<PlayerConfig>> configsStream = _playerConfigRepository.playerConfigs;
     Stream<PredictionsLoadSuccess> stateStream =
-        Rx.combineLatest2(predictions, names, (a, b) => PredictionsLoadSuccess(a, b));
+        Rx.combineLatest2(predictionsStream, configsStream, (predictions, configs) {
+      Map<Player, String> names = Map.fromIterable(
+        configs,
+        key: (config) => config.player,
+        value: (config) => config.name,
+      );
+      Map<Player, bool> enables = Map.fromIterable(
+        configs,
+        key: (config) => config.player,
+        value: (config) => config.enabled,
+      );
+      return PredictionsLoadSuccess.unmodifiable(predictions, names, enables);
+    });
     _repositoriesSubscription = stateStream.listen((event) {
       emit(event);
     });

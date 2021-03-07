@@ -160,8 +160,13 @@ class _PredictionsListState extends State<PredictionsList> {
   /// and discard any local changes by overwriting the local state, thus triggering UI rebuild.
   void _onNewCubitState(BuildContext context, PredictionsState state) {
     setState(() {
-      _isLoading = state is! PredictionsLoadSuccess;
-      _predictionsMap = (state as PredictionsLoadSuccess).predictions;
+      if (!(_isLoading = state is! PredictionsLoadSuccess)) {
+        PredictionsLoadSuccess stateSuccess = state;
+        _predictionsMap = Map.of(stateSuccess.predictions).map((key, value) => MapEntry(key, List.of(value)));
+        // Remove every disabled player from the map
+        _predictionsMap.values.forEach((List<Player> sectionPlayers) =>
+            sectionPlayers.removeWhere((Player player) => !stateSuccess.enables[player]));
+      }
     });
   }
 
