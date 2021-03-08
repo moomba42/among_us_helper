@@ -1,6 +1,6 @@
 import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/core/model/player_config.dart";
-import "package:rxdart/subjects.dart";
+import "package:rxdart/rxdart.dart";
 
 class PlayerConfigRepository {
   // TODO: Replace with data store.
@@ -17,8 +17,8 @@ class PlayerConfigRepository {
     List<PlayerConfig> newMap = [];
 
     // Duplicate current data into new map
-    if (_playerConfigs.valueWrapper != null) {
-      newMap.addAll(_playerConfigs.valueWrapper.value);
+    if (_playerConfigs.hasValue) {
+      newMap.addAll(_playerConfigs.value);
     }
 
     // Remove duplicates

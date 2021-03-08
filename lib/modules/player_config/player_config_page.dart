@@ -9,10 +9,14 @@ class PlayerConfigPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).canvasColor,
-      body: BlocProvider(
-          create: (BuildContext context) =>
-              PlayerConfigCubit(playerConfigRepository: context.read<PlayerConfigRepository>()),
-          child: PlayerNamesView()),
+      body: BlocProvider<PlayerConfigCubit>(
+        create: _createCubit,
+        child: PlayerNamesView(),
+      ),
     );
+  }
+
+  PlayerConfigCubit _createCubit(BuildContext context) {
+    return PlayerConfigCubit(playerConfigRepository: context.read<PlayerConfigRepository>());
   }
 }

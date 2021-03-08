@@ -1,3 +1,4 @@
+import "package:among_us_helper/core/model/pathing_entry.dart";
 import "package:among_us_helper/core/model/player.dart";
 import "package:flutter/material.dart";
 
@@ -39,8 +40,8 @@ class _MapDisplayState extends State<MapDisplay> {
         SizedBox(width: PLAYER_WIDTH + e.players.length * PLAYER_SPACING, height: PLAYER_HEIGHT));
 
     return Positioned(
-      left: e.position.dx,
-      top: e.position.dy,
+      left: e.position.x,
+      top: e.position.y,
       child: Stack(
         children: entries,
       ),
@@ -57,11 +58,4 @@ class _MapDisplayState extends State<MapDisplay> {
             isAntiAlias: true,
             filterQuality: FilterQuality.high));
   }
-}
-
-class PathingEntry {
-  final Offset position;
-  final List<Player> players;
-
-  PathingEntry(this.position, this.players);
 }

@@ -1,6 +1,8 @@
 import "package:among_us_helper/core/icons.dart";
 import "package:among_us_helper/modules/map/map_page.dart";
+import "package:among_us_helper/modules/map/repository/map_location_repository.dart";
 import "package:among_us_helper/modules/pathing/pathing_page.dart";
+import "package:among_us_helper/modules/pathing/repository/pathing_repository.dart";
 import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
 import "package:among_us_helper/modules/predictions/predictions_page.dart";
 import "package:among_us_helper/modules/predictions/repositories/predictions_repository.dart";
@@ -35,7 +37,13 @@ class AmongUsHelperApp extends StatelessWidget {
       ),
       RepositoryProvider<PlayerConfigRepository>(
         create: (BuildContext context) => PlayerConfigRepository(),
-      )
+      ),
+      RepositoryProvider<MapLocationRepository>(
+        create: (BuildContext context) => MapLocationRepository(),
+      ),
+      RepositoryProvider<PathingRepository>(
+        create: (BuildContext context) => PathingRepository(),
+      ),
     ];
   }
 }

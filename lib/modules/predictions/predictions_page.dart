@@ -8,11 +8,16 @@ import "package:flutter_bloc/flutter_bloc.dart";
 class PredictionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (BuildContext context) => PredictionsCubit(
-              predictionsRepository: context.read<PredictionsRepository>(),
-              playerConfigRepository: context.read<PlayerConfigRepository>(),
-            ),
-        child: PredictionsView());
+    return BlocProvider<PredictionsCubit>(
+      create: _createCubit,
+      child: PredictionsView(),
+    );
+  }
+
+  PredictionsCubit _createCubit(BuildContext context) {
+    return PredictionsCubit(
+      predictionsRepository: context.read<PredictionsRepository>(),
+      playerConfigRepository: context.read<PlayerConfigRepository>(),
+    );
   }
 }

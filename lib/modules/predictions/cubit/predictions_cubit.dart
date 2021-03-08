@@ -87,7 +87,7 @@ class PredictionsCubit extends Cubit<PredictionsState> {
   }
 
   @override
-  Future<Function> close() {
+  Future<void> close() {
     _repositoriesSubscription?.cancel();
     return super.close();
   }

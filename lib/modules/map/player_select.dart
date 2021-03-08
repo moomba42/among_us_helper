@@ -1,12 +1,12 @@
+import 'dart:math';
+
 import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/core/widgets/submit_button.dart";
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
 
 class PlayerSelect extends StatefulWidget {
-  final Function(List<Player>) onSelected;
-
-  const PlayerSelect({Key key, this.onSelected}) : super(key: key);
+  const PlayerSelect({Key key}) : super(key: key);
 
   @override
   _PlayerSelectState createState() => _PlayerSelectState();
@@ -23,14 +23,11 @@ class _PlayerSelectState extends State<PlayerSelect> {
   }
 
   void _onSubmit() {
-    widget.onSelected(_getSelectedPlayers());
+    Navigator.pop(context, _getSelectedPlayers());
   }
 
-  List<Player> _getSelectedPlayers() {
-    return _selection.entries
-        .where((element) => element.value)
-        .map((e) => e.key)
-        .toList(growable: false);
+  Set<Player> _getSelectedPlayers() {
+    return _selection.entries.where((element) => element.value).map((e) => e.key).toSet();
   }
 
   bool _isAnythingSelected() {
@@ -51,22 +48,36 @@ class _PlayerSelectState extends State<PlayerSelect> {
           SizedBox(height: contentSpacing),
           Text("Who was here?", style: headlineStyle),
           SizedBox(height: contentSpacing),
-          GridView.count(
-            primary: true,
-            shrinkWrap: true,
-            crossAxisCount: 4,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(vertical: 8),
-            children: _selection.entries
-                .map((entry) => _buildPlayerOption(entry.key, entry.value))
-                .toList(growable: false),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                // Calculate such column count, that the tiles reach the bottom.
+                int itemCount = _selection.length;
+                double width = constraints.maxWidth;
+                double height = constraints.maxHeight;
+                double x = sqrt(width * height).ceilToDouble();
+                int columns = (width / sqrt((x * x).ceilToDouble() / itemCount).ceilToDouble()).ceil();
+
+                return GridView.count(
+                  primary: true,
+                  shrinkWrap: true,
+                  crossAxisCount: columns,
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  children: _selection.entries
+                      .map((entry) => _buildPlayerOption(entry.key, entry.value))
+                      .toList(growable: false),
+                );
+              },
+            ),
           ),
           SubmitButton(
-              onPressed: _isAnythingSelected() ? _onSubmit : null,
-              label: "Confirm Positions",
-              leadingIcon: Icons.check_circle)
+            onPressed: _isAnythingSelected() ? _onSubmit : null,
+            label: "Confirm Positions",
+            leadingIcon: Icons.check_circle,
+          )
         ],
       ),
     );
@@ -83,13 +94,12 @@ class _PlayerSelectState extends State<PlayerSelect> {
 
     var button = ElevatedButton(
       style: ButtonStyle(
-        elevation: MaterialStateProperty.all(selected ? 4 : null),
-        backgroundColor: MaterialStateProperty.all(player.getColor()),
-        padding: MaterialStateProperty.all(EdgeInsets.zero),
-        shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-        animationDuration: Duration(milliseconds: 200)
-      ),
+          elevation: MaterialStateProperty.all(selected ? 4 : null),
+          backgroundColor: MaterialStateProperty.all(player.getColor()),
+          padding: MaterialStateProperty.all(EdgeInsets.zero),
+          shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+          animationDuration: Duration(milliseconds: 200)),
       onPressed: () => _onPlayerToggle(player),
       child: Stack(children: [
         Positioned(
