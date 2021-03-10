@@ -39,7 +39,9 @@ class _MapViewState extends State<MapView> {
         child: SizedBox(
           width: 128,
           height: 128,
-          child: CircularProgressIndicator(strokeWidth: 12,),
+          child: CircularProgressIndicator(
+            strokeWidth: 12,
+          ),
         ),
       );
     }
@@ -47,6 +49,7 @@ class _MapViewState extends State<MapView> {
     MapLoadSuccess stateSuccess = state;
 
     var assetImage = SvgPicture.asset(stateSuccess.map.getSvgAsset());
+
     return MapDisplay(
       mapImage: assetImage,
       pathing: stateSuccess.pathing,
@@ -83,12 +86,10 @@ class _MapViewState extends State<MapView> {
     // Get the click position in image pixels, relative to the image"s top left corner.
     Offset clickOnImage = (imageSize / 2) - clickPos;
 
-    Point<double> clickPoint = Point(clickOnImage.dx, clickOnImage.dy);
-
-    _onMapClicked(clickPoint);
+    _onMapClicked(clickOnImage);
   }
 
-  void _onMapClicked(Point<double> inPixels) {
+  void _onMapClicked(Offset inPixels) {
     showModalBottomSheet<Set<Player>>(
       context: context,
       shape: RoundedRectangleBorder(
@@ -96,17 +97,13 @@ class _MapViewState extends State<MapView> {
               BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8))),
       builder: (context) => PlayerSelect(),
     ).then((Set<Player> selectedPlayers) {
-      if(selectedPlayers == null || selectedPlayers.isEmpty) {
+      if (selectedPlayers == null || selectedPlayers.isEmpty) {
         return;
       }
 
-      this.context.read<MapCubit>().addPathingEntry(
-            PathingEntry(
-              location: null,
-              position: inPixels,
-              players: selectedPlayers,
-              time: DateTime.now().millisecondsSinceEpoch,
-            ),
+      this.context.read<MapCubit>().createPathingEntryAt(
+            position: inPixels,
+            players: selectedPlayers,
           );
     });
   }

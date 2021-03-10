@@ -1,6 +1,5 @@
 import "package:among_us_helper/core/icons.dart";
 import "package:among_us_helper/modules/map/map_page.dart";
-import "package:among_us_helper/modules/map/repository/map_location_repository.dart";
 import "package:among_us_helper/modules/pathing/pathing_page.dart";
 import "package:among_us_helper/modules/pathing/repository/pathing_repository.dart";
 import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
@@ -8,9 +7,19 @@ import "package:among_us_helper/modules/predictions/predictions_page.dart";
 import "package:among_us_helper/modules/predictions/repositories/predictions_repository.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:logging/logging.dart";
+
 
 void main() {
+  initializeLogging();
   runApp(AmongUsHelperApp());
+}
+
+void initializeLogging() {
+  Logger.root.level = Level.ALL; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    print("${record.level.name}: ${record.time}: ${record.message}");
+  });
 }
 
 class AmongUsHelperApp extends StatelessWidget {
@@ -37,9 +46,6 @@ class AmongUsHelperApp extends StatelessWidget {
       ),
       RepositoryProvider<PlayerConfigRepository>(
         create: (BuildContext context) => PlayerConfigRepository(),
-      ),
-      RepositoryProvider<MapLocationRepository>(
-        create: (BuildContext context) => MapLocationRepository(),
       ),
       RepositoryProvider<PathingRepository>(
         create: (BuildContext context) => PathingRepository(),

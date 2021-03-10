@@ -15,8 +15,8 @@ class MapDisplay extends StatefulWidget {
 
 class _MapDisplayState extends State<MapDisplay> {
   static const double PLAYER_SPACING = 10.0;
-  static const double PLAYER_WIDTH = 30.0;
-  static const double PLAYER_HEIGHT = 40.0;
+  static const double PLAYER_WIDTH = 60.0;
+  static const double PLAYER_HEIGHT = 80.0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +34,15 @@ class _MapDisplayState extends State<MapDisplay> {
           Positioned(top: 0, left: entries.length * PLAYER_SPACING, child: _buildPlayer(player)));
     }
 
+    double totalWidth = PLAYER_WIDTH + e.players.length * PLAYER_SPACING;
+
     // At least one non-positioned entry is needed to size the stack widget.
     // Otherwise its size will be (0,0).
-    entries.add(
-        SizedBox(width: PLAYER_WIDTH + e.players.length * PLAYER_SPACING, height: PLAYER_HEIGHT));
+    entries.add(SizedBox(width: totalWidth, height: PLAYER_HEIGHT));
 
     return Positioned(
-      left: e.position.x,
-      top: e.position.y,
+      left: e.position.x - (totalWidth / 2),
+      top: e.position.y - (PLAYER_HEIGHT / 2),
       child: Stack(
         children: entries,
       ),
@@ -51,8 +52,8 @@ class _MapDisplayState extends State<MapDisplay> {
   Widget _buildPlayer(Player player) {
     String name = player.toString().split(".")[1].toLowerCase();
     return SizedBox(
-        width: 30,
-        height: 40,
+        width: PLAYER_WIDTH,
+        height: PLAYER_HEIGHT,
         child: Image(
             image: AssetImage("assets/players/$name.png"),
             isAntiAlias: true,
