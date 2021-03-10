@@ -16,4 +16,9 @@ class PathingRepository {
   Future<List<PathingEntry>> getPathing() {
     return Future.value(_pathing.value);
   }
+
+  Future<void> reset() {
+    _pathing.add([]);
+    return Future.value();
+  }
 }

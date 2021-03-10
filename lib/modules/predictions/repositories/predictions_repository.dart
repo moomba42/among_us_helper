@@ -27,6 +27,10 @@ class PredictionsRepository {
     _predictions.add(newMap);
   }
 
+  void reset() {
+    _predictions.add(_generateInitialPredictions());
+  }
+
   /// Generates an initial state of predictions.
   static Map<PredictionsSection, List<Player>> _generateInitialPredictions() {
     Map<PredictionsSection, List<Player>> initialData = Map.fromIterable(PredictionsSection.values,

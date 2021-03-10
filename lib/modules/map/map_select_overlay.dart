@@ -1,4 +1,5 @@
 import "package:among_us_helper/core/model/au_map.dart";
+import "package:among_us_helper/core/widgets/confirmation_dialog.dart";
 import "package:among_us_helper/modules/map/cubit/map_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -126,11 +127,30 @@ class _MapSelectOverlayState extends State<MapSelectOverlay> with TickerProvider
   }
 
   void _selectMap(AUMap map) {
-    context.read<MapCubit>().setMap(map);
-    if (_expanded) {
-      _expanded = false;
-      _animController.forward();
-    }
+    ConfirmationDialog.showConfirmationDialog(
+      context: context,
+      title: Text("Changing map"),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Changing the map will reset the pathing information & notes."),
+          Text("Player names will be preserved."),
+          SizedBox(height: 8),
+          Text("Are you sure you want to continue?"),
+        ],
+      ),
+    ).then((result) {
+      if (result != Confirmation.ACCEPTED) {
+        return;
+      }
+
+      context.read<MapCubit>().setMap(map);
+      if (_expanded) {
+        _expanded = false;
+        _animController.forward();
+      }
+    });
   }
 
   void _toggleMapSelect() {

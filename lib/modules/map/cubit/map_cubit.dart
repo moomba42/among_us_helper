@@ -35,6 +35,7 @@ class MapCubit extends Cubit<MapState> {
   }
 
   void setMap(AUMap map) async {
+    await _pathingRepository.reset();
     List<PathingEntry> pathingSingle = await _pathingRepository.getPathing();
     emit(MapLoadSuccess(map, pathingSingle));
   }

@@ -62,6 +62,7 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
             ),
             actions: [
               IconButton(
+                iconSize: 32,
                 padding: EdgeInsets.all(0),
                 icon: Icon(Icons.autorenew),
                 onPressed: _onResetPressed,
