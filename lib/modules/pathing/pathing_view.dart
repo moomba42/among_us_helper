@@ -9,18 +9,16 @@ import "package:flutter_bloc/flutter_bloc.dart";
 class PathingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          TitleBar(
-            title: "Pathing",
-          ),
-          SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: _buildEntries(context),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        TitleBar(
+          title: "Pathing",
+        ),
+        SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: _buildEntries(context),
+        )
+      ],
     );
   }
 
@@ -28,10 +26,14 @@ class PathingView extends StatelessWidget {
     return BlocBuilder<PathingCubit, PathingState>(
       builder: (BuildContext context, PathingState state) {
         if (state is! PathingLoadSuccess) {
-          return Text("No entries");
+          return _buildNoEntries();
         }
 
         PathingLoadSuccess stateSuccess = state;
+
+        if (stateSuccess.pathing.isEmpty) {
+          return _buildNoEntries();
+        }
 
         List<Widget> items =
             stateSuccess.pathing.entries.map((MapEntry<Player, List<PathingEntry>> mapEntry) {
@@ -63,5 +65,12 @@ class PathingView extends StatelessWidget {
       return name;
     }
     return player.getCamelName();
+  }
+
+  Widget _buildNoEntries() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [Text("No entries. Go to the map!")],
+    );
   }
 }

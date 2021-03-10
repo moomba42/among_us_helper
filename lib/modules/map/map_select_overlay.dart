@@ -2,6 +2,7 @@ import "package:among_us_helper/core/model/au_map.dart";
 import "package:among_us_helper/core/widgets/confirmation_dialog.dart";
 import "package:among_us_helper/modules/map/cubit/map_cubit.dart";
 import "package:flutter/material.dart";
+import 'package:flutter/services.dart';
 import "package:flutter_bloc/flutter_bloc.dart";
 
 class MapSelectOverlay extends StatefulWidget {
@@ -35,16 +36,19 @@ class _MapSelectOverlayState extends State<MapSelectOverlay> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.body,
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: _buildAppBar(),
-        )
-      ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Stack(
+        children: [
+          widget.body,
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildAppBar(),
+          )
+        ],
+      ),
     );
   }
 
@@ -56,9 +60,7 @@ class _MapSelectOverlayState extends State<MapSelectOverlay> with TickerProvider
           left: 0,
           right: 0,
           bottom: 0,
-          child: SafeArea(
-            child: _GradientBackground(),
-          ),
+          child: _GradientBackground(),
         ),
         BlocBuilder<MapCubit, MapState>(
           builder: (BuildContext context, MapState state) {
@@ -71,15 +73,17 @@ class _MapSelectOverlayState extends State<MapSelectOverlay> with TickerProvider
 
             List<AUMap> others = List.of(AUMap.values)..remove(map);
 
-            return Column(
-              children: [
-                _buildSelection(map),
-                AnimatedContainer(
-                  height: _expanded ? APP_BAR_HEIGHT * (AUMap.values.length - 1) : 0,
-                  duration: Duration(milliseconds: 200),
-                  child: _buildMapOptionsList(others),
-                )
-              ],
+            return SafeArea(
+              child: Column(
+                children: [
+                  _buildSelection(map),
+                  AnimatedContainer(
+                    height: _expanded ? APP_BAR_HEIGHT * (AUMap.values.length - 1) : 0,
+                    duration: Duration(milliseconds: 200),
+                    child: _buildMapOptionsList(others),
+                  )
+                ],
+              ),
             );
           },
         )

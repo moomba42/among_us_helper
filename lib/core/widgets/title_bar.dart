@@ -20,23 +20,25 @@ class TitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle headline3 = Theme.of(context).textTheme.headline3.copyWith(color: Colors.black87);
-    return Padding(
-      padding: const EdgeInsets.all(_PADDING),
-      child: Row(
-        textBaseline: TextBaseline.ideographic,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        // Pushes actions apart to the right, from leading and title widgets.
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              if (leading != null) leading,
-              if (leading != null) SizedBox(width: _PADDING),
-              Text(title, style: headline3),
-            ],
-          ),
-          if (actions != null) Row(children: actions),
-        ],
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(_PADDING),
+        child: Row(
+          textBaseline: TextBaseline.ideographic,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          // Pushes actions apart to the right, from leading and title widgets.
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                if (leading != null) leading,
+                if (leading != null) SizedBox(width: _PADDING),
+                Text(title, style: headline3),
+              ],
+            ),
+            if (actions != null) Row(children: actions),
+          ],
+        ),
       ),
     );
   }
