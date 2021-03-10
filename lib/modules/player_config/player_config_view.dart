@@ -90,7 +90,7 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
 
   Widget _buildListView(BuildContext context) {
     return ListView.separated(
-      padding: EdgeInsets.all(_LIST_PADDING),
+      padding: EdgeInsets.all(_LIST_PADDING).copyWith(bottom: 80),
       itemCount: Player.values.length,
       separatorBuilder: (BuildContext context, int index) =>
           Divider(height: _LIST_DIVIDER_HEIGHT, indent: 69),
