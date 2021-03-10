@@ -8,7 +8,7 @@ import "package:meta/meta.dart";
 part "player_config_state.dart";
 
 class PlayerConfigCubit extends Cubit<PlayerConfigState> {
-  final Logger _logger = Logger("PlayerNamesCubit");
+  final Logger _logger = Logger("PlayerConfigCubit");
   final PlayerConfigRepository _playerConfigRepository;
 
   PlayerConfigCubit({@required PlayerConfigRepository playerConfigRepository})

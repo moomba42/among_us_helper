@@ -1,4 +1,4 @@
-import 'dart:ui';
+import "dart:ui";
 
 import "package:among_us_helper/core/model/map_location.dart";
 

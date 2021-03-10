@@ -10,7 +10,7 @@ import "package:meta/meta.dart";
 part "pathing_state.dart";
 
 class PathingCubit extends Cubit<PathingState> {
-  final Logger _logger = Logger("PlayerNamesCubit");
+  final Logger _logger = Logger("PathingCubit");
   final PathingRepository _pathingRepository;
 
   StreamSubscription<List<PathingEntry>> _pathingSubscription;

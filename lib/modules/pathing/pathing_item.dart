@@ -1,6 +1,5 @@
 import "dart:ui";
 
-import "package:among_us_helper/core/ui_functions.dart";
 import "package:flutter/material.dart";
 
 class PathingTile extends StatelessWidget {

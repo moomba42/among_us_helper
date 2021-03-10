@@ -1,11 +1,11 @@
 import "dart:async";
-import 'dart:math';
-import 'dart:ui';
+import "dart:math";
+import "dart:ui";
 
 import "package:among_us_helper/core/model/au_map.dart";
-import 'package:among_us_helper/core/model/map_location.dart';
+import "package:among_us_helper/core/model/map_location.dart";
 import "package:among_us_helper/core/model/pathing_entry.dart";
-import 'package:among_us_helper/core/model/player.dart';
+import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/modules/pathing/repository/pathing_repository.dart";
 import "package:bloc/bloc.dart";
 import "package:logging/logging.dart";
@@ -14,7 +14,7 @@ import "package:meta/meta.dart";
 part "map_state.dart";
 
 class MapCubit extends Cubit<MapState> {
-  final Logger _logger = Logger("PlayerNamesCubit");
+  final Logger _logger = Logger("MapCubit");
   final PathingRepository _pathingRepository;
 
   StreamSubscription<List<PathingEntry>> _pathingSubscription;

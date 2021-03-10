@@ -1,11 +1,8 @@
-import 'dart:math';
-
-import 'package:among_us_helper/core/model/pathing_entry.dart';
-import 'package:among_us_helper/core/model/player.dart';
+import "package:among_us_helper/core/model/au_map.dart";
+import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/modules/map/cubit/map_cubit.dart";
 import "package:among_us_helper/modules/map/map_display.dart";
-import "package:among_us_helper/core/model/au_map.dart";
-import "package:among_us_helper/modules/map/player_select.dart";
+import "package:among_us_helper/modules/player_select/player_select.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/flutter_svg.dart";
@@ -90,13 +87,7 @@ class _MapViewState extends State<MapView> {
   }
 
   void _onMapClicked(Offset inPixels) {
-    showModalBottomSheet<Set<Player>>(
-      context: context,
-      shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8))),
-      builder: (context) => PlayerSelect(),
-    ).then((Set<Player> selectedPlayers) {
+    PlayerSelect.showModal(context).then((Set<Player> selectedPlayers) {
       if (selectedPlayers == null || selectedPlayers.isEmpty) {
         return;
       }
