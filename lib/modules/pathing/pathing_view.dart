@@ -38,7 +38,7 @@ class PathingView extends StatelessWidget {
         List<Widget> items =
             stateSuccess.pathing.entries.map((MapEntry<Player, List<PathingEntry>> mapEntry) {
           Player player = mapEntry.key;
-          String playerName = player.getName();
+          String playerName = player.getNameLowercase();
           List<PathingEntry> entries = mapEntry.value;
           return PathingTile(
             label: _textOrPlayerName(stateSuccess.names[player], player),

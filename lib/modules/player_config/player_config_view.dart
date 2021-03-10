@@ -145,7 +145,7 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
   /// Constructs a sized image [Widget] that represents an avatar for the given [player].
   /// The image name is deduced from the enumerated name.
   Widget _getImageForPlayer(Player player) {
-    String playerName = player.getName();
+    String playerName = player.getNameLowercase();
 
     return SizedBox(
       height: _LIST_ELEMENT_HEIGHT * 3 / 4,

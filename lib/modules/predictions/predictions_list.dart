@@ -235,7 +235,7 @@ class _Entry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color bgColor = _player.getColor();
-    String playerName = _player.getName();
+    String playerName = _player.getNameLowercase();
     bool isBright = bgColor.computeLuminance() > 0.5;
     Color textColor = isBright ? Colors.black87 : Colors.white;
 
