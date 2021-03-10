@@ -50,12 +50,12 @@ class _MapDisplayState extends State<MapDisplay> {
   }
 
   Widget _buildPlayer(Player player) {
-    String name = player.toString().split(".")[1].toLowerCase();
+    String playerName = player.getName();
     return SizedBox(
         width: PLAYER_WIDTH,
         height: PLAYER_HEIGHT,
         child: Image(
-            image: AssetImage("assets/players/$name.png"),
+            image: AssetImage("assets/players/$playerName.png"),
             isAntiAlias: true,
             filterQuality: FilterQuality.high));
   }

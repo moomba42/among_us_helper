@@ -235,7 +235,7 @@ class _Entry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color bgColor = _player.getColor();
-    String playerName = _player.toString().split(".")[1].toLowerCase();
+    String playerName = _player.getName();
     bool isBright = bgColor.computeLuminance() > 0.5;
     Color textColor = isBright ? Colors.black87 : Colors.white;
 
@@ -318,8 +318,7 @@ class _Entry extends StatelessWidget {
 
     // If the player name is empty then substitute it with the enumerated name.
     if (label.isEmpty) {
-      label = _player.toString().split(".")[1].toLowerCase();
-      label = label.substring(0, 1).toUpperCase() + label.substring(1);
+      label = _player.getCamelName();
     }
 
     // Return a text widget to represent the label.
@@ -342,13 +341,7 @@ class _Header extends StatelessWidget {
     TextStyle headline5 = Theme.of(context).textTheme.headline5.copyWith(color: Colors.black87);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: Text(_label, style: headline5),
+      child: Text(_section.getCamelName(), style: headline5),
     );
-  }
-
-  /// Calculates the label based on the [_section]'s full name.
-  String get _label {
-    String name = _section.toString().split(".")[1];
-    return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
   }
 }

@@ -71,9 +71,6 @@ class PlayerSelectCubit extends Cubit<PlayerSelectState> {
       return name;
     }
 
-    String playerName = player.toString().split(".")[1].toLowerCase();
-    String camelName = playerName.substring(0, 1).toUpperCase() + playerName.substring(1);
-
-    return camelName;
+    return player.getCamelName();
   }
 }

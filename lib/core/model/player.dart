@@ -16,8 +16,24 @@ enum Player {
   BLACK,
 }
 
+extension GetPlayerName on Player {
+  String getName() {
+    return this.toString().split(".")[1];
+  }
+
+  String getNameLowercase() {
+    return this.getName().toLowerCase();
+  }
+
+  String getCamelName() {
+    String name = this.getNameLowercase();
+    String camelName = name.substring(0, 1).toUpperCase() + name.substring(1);
+    return camelName;
+  }
+}
+
 /// Provides color information for each player enumeration.
-extension PlayerColor on Player {
+extension GetPlayerColor on Player {
   Color getColor() {
     switch (this) {
       case Player.BROWN:

@@ -121,7 +121,7 @@ class _PlayerSelectState extends State<PlayerSelect> {
 
   Widget _buildPlayerOption(Player player, bool selected, String name) {
     var primaryColor = Theme.of(context).primaryColor;
-    String enumeratedName = player.toString().split(".")[1].toLowerCase();
+    String enumeratedName = player.getName();
     Color bgColor = player.getColor();
     bool isBright = bgColor.computeLuminance() > 0.5;
     Color textColor = isBright ? Colors.black87 : Colors.white;
