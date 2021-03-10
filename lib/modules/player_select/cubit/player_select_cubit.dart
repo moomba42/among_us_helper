@@ -66,7 +66,7 @@ class PlayerSelectCubit extends Cubit<PlayerSelectState> {
     return super.close();
   }
 
-  _textOrPlayerName(String name, Player player) {
+  String _textOrPlayerName(String name, Player player) {
     if (name != null && name.isNotEmpty) {
       return name;
     }

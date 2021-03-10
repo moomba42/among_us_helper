@@ -37,10 +37,9 @@ class PathingView extends StatelessWidget {
             stateSuccess.pathing.entries.map((MapEntry<Player, List<PathingEntry>> mapEntry) {
           Player player = mapEntry.key;
           String name = player.toString().split(".")[1].toLowerCase();
-          String camelName = name.substring(0, 1).toUpperCase() + name.substring(1);
           List<PathingEntry> entries = mapEntry.value;
           return PathingTile(
-            label: camelName,
+            label: _textOrPlayerName(stateSuccess.names[player], player),
             icon: Image(
                 image: AssetImage("assets/players/$name.png"),
                 isAntiAlias: true,
@@ -56,5 +55,17 @@ class PathingView extends StatelessWidget {
         );
       },
     );
+  }
+
+  // TODO: Remove duplicate code
+  String _textOrPlayerName(String name, Player player) {
+    if (name != null && name.isNotEmpty) {
+      return name;
+    }
+
+    String playerName = player.toString().split(".")[1].toLowerCase();
+    String camelName = playerName.substring(0, 1).toUpperCase() + playerName.substring(1);
+
+    return camelName;
   }
 }
