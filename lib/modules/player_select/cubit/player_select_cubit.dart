@@ -37,8 +37,12 @@ class PlayerSelectCubit extends Cubit<PlayerSelectState> {
       newState.removeWhere((Player player, bool selected) =>
           event.firstWhere((PlayerConfig config) => config.player == player).enabled == false);
 
+      Map<Player, String> names = Map.fromIterable(event,
+          key: (config) => config.player,
+          value: (config) => _textOrPlayerName(config.name, config.player));
+
       // Push the new state.
-      emit(PlayerSelectLoadSuccess(newState));
+      emit(PlayerSelectLoadSuccess(newState, names));
     });
   }
 
@@ -53,12 +57,23 @@ class PlayerSelectCubit extends Cubit<PlayerSelectState> {
     Map<Player, bool> duplicate = Map.of(stateSuccess.selection);
     duplicate[player] = !duplicate[player];
 
-    emit(PlayerSelectLoadSuccess(duplicate));
+    emit(PlayerSelectLoadSuccess(duplicate, stateSuccess.names));
   }
 
   @override
   Future<void> close() {
     _playerConfigSubscription?.cancel();
     return super.close();
+  }
+
+  _textOrPlayerName(String name, Player player) {
+    if (name != null && name.isNotEmpty) {
+      return name;
+    }
+
+    String playerName = player.toString().split(".")[1].toLowerCase();
+    String camelName = playerName.substring(0, 1).toUpperCase() + playerName.substring(1);
+
+    return camelName;
   }
 }

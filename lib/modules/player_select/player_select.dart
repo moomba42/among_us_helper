@@ -72,7 +72,7 @@ class _PlayerSelectState extends State<PlayerSelect> {
                       mainAxisSpacing: 8,
                       crossAxisSpacing: 8,
                       children: selection.entries
-                          .map((entry) => _buildPlayerOption(entry.key, entry.value))
+                          .map((entry) => _buildPlayerOption(entry.key, entry.value, stateSuccess.names[entry.key]))
                           .toList(growable: false),
                     );
                   },
@@ -119,13 +119,11 @@ class _PlayerSelectState extends State<PlayerSelect> {
     Navigator.pop(context, selection);
   }
 
-  Widget _buildPlayerOption(Player player, bool selected) {
+  Widget _buildPlayerOption(Player player, bool selected, String name) {
     var primaryColor = Theme.of(context).primaryColor;
-
+    String enumeratedName = player.toString().split(".")[1].toLowerCase();
     Color bgColor = player.getColor();
     bool isBright = bgColor.computeLuminance() > 0.5;
-    String name = player.toString().split(".")[1].toLowerCase();
-    String camelName = name.substring(0, 1).toUpperCase() + name.substring(1);
     Color textColor = isBright ? Colors.black87 : Colors.white;
 
     var button = ElevatedButton(
@@ -144,7 +142,7 @@ class _PlayerSelectState extends State<PlayerSelect> {
             right: 20,
             top: 40,
             child: Image(
-                image: AssetImage("assets/players/$name.png"),
+                image: AssetImage("assets/players/$enumeratedName.png"),
                 isAntiAlias: true,
                 filterQuality: FilterQuality.high)),
         Container(
@@ -153,7 +151,7 @@ class _PlayerSelectState extends State<PlayerSelect> {
         Positioned(
             left: 16,
             top: 8,
-            child: Text(camelName,
+            child: Text(name,
                 style: Theme.of(context).textTheme.bodyText2.copyWith(color: textColor)))
       ]),
     );
