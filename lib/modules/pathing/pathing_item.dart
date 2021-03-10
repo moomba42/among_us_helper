@@ -7,11 +7,10 @@ class PathingTile extends StatelessWidget {
   final String label;
   final Widget icon;
   final Color tileColor;
-  final Function onMapPressed;
-  final Map<String, double> pathing;
+  final Map<String, int> pathing;
 
   const PathingTile(
-      {Key key, this.label, this.icon, this.tileColor, this.onMapPressed, this.pathing})
+      {Key key, this.label, this.icon, this.tileColor, this.pathing})
       : super(key: key);
 
   @override
@@ -36,29 +35,6 @@ class PathingTile extends StatelessWidget {
               SizedBox(height: 16),
               _buildDetails(context, isBright),
               SizedBox(height: 16),
-              if (onMapPressed != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    OutlinedButton.icon(
-                        style: ButtonStyle(
-                            foregroundColor: MaterialStateProperty.all(textColor),
-                            overlayColor: MaterialStateProperty.all(textColor.withOpacity(0.1)),
-                            visualDensity: VisualDensity.standard,
-                            side: materialProperty(
-                                forStates: [
-                                  MaterialState.hovered,
-                                  MaterialState.focused,
-                                  MaterialState.pressed,
-                                  MaterialState.selected
-                                ],
-                                ifContains: BorderSide(color: textColor),
-                                ifNot: BorderSide(color: textColor.withOpacity(0.1)))),
-                        onPressed: () {},
-                        label: Text("SHOW ON MAP"),
-                        icon: Icon(Icons.arrow_forward))
-                  ],
-                )
             ],
           )),
     );
@@ -99,8 +75,8 @@ class PathingTile extends StatelessWidget {
     );
   }
 
-  String formatTime(double time) {
-    Duration duration = Duration(milliseconds: time.round());
+  String formatTime(int time) {
+    Duration duration = Duration(milliseconds: time);
 
     return [duration.inMinutes, duration.inSeconds]
         .map((seg) => seg.remainder(60).toString().padLeft(2, "0"))

@@ -1,66 +1,24 @@
-import "package:among_us_helper/modules/pathing/pathing_item.dart";
+import "package:among_us_helper/modules/pathing/cubit/pathing_cubit.dart";
+import "package:among_us_helper/modules/pathing/pathing_view.dart";
+import "package:among_us_helper/modules/pathing/repository/pathing_repository.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
-class PathingPage extends StatefulWidget {
-  @override
-  _PathingPageState createState() => _PathingPageState();
-}
-
-class _PathingPageState extends State<PathingPage> {
+class PathingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var headline3 = Theme.of(context).textTheme.headline3.copyWith(color: Colors.black87);
-
-    return SafeArea(
-      child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Text("Pathing", style: headline3),
-          ),
-          PathingTile(
-            label: "Brown",
-            icon: Image(
-                image: AssetImage("assets/players/brown.png"),
-                isAntiAlias: true,
-                filterQuality: FilterQuality.high),
-            tileColor: Color(0xFF72491E),
-            onMapPressed: () {},
-            pathing: {
-              "Cafeteria": 13400,
-              "Navigation": 20552,
-              "Storage": 551442,
-              "Security": 761203
-            },
-          ),
-          PathingTile(
-            label: "Red",
-            icon: Image(
-                image: AssetImage("assets/players/red.png"),
-                isAntiAlias: true,
-                filterQuality: FilterQuality.high),
-            tileColor: Color(0xFFC51111),
-            onMapPressed: () {},
-            pathing: Map.identity(),
-          ),
-          PathingTile(
-            label: "White",
-            icon: Image(
-                image: AssetImage("assets/players/white.png"),
-                isAntiAlias: true,
-                filterQuality: FilterQuality.high),
-            tileColor: Colors.white,
-            onMapPressed: () {},
-            pathing: {
-              "Cafeteria": 13400,
-              "Navigation": 20552,
-              "Storage": 551442,
-              "Security": 761203
-            },
-          ),
-        ],
+    return Scaffold(
+      backgroundColor: Theme.of(context).canvasColor,
+      body: BlocProvider<PathingCubit>(
+        create: _createCubit,
+        child: PathingView(),
       ),
+    );
+  }
+
+  PathingCubit _createCubit(BuildContext context) {
+    return PathingCubit(
+      pathingRepository: context.read<PathingRepository>(),
     );
   }
 }
