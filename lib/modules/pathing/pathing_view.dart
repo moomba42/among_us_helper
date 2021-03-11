@@ -1,7 +1,7 @@
 import "package:among_us_helper/core/model/pathing_entry.dart";
 import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/core/widgets/title_bar.dart";
-import "package:among_us_helper/modules/pathing/cubit/pathing_cubit.dart";
+import "package:among_us_helper/modules/pathing/cubit/pathing_view_cubit.dart";
 import "package:among_us_helper/modules/pathing/pathing_item.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -23,13 +23,13 @@ class PathingView extends StatelessWidget {
   }
 
   Widget _buildEntries(BuildContext context) {
-    return BlocBuilder<PathingCubit, PathingState>(
-      builder: (BuildContext context, PathingState state) {
-        if (state is! PathingLoadSuccess) {
+    return BlocBuilder<PathingViewCubit, PathingViewState>(
+      builder: (BuildContext context, PathingViewState state) {
+        if (state is! PathingViewLoadSuccess) {
           return _buildNoEntries();
         }
 
-        PathingLoadSuccess stateSuccess = state;
+        PathingViewLoadSuccess stateSuccess = state;
 
         if (stateSuccess.pathing.isEmpty) {
           return _buildNoEntries();

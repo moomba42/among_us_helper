@@ -2,10 +2,11 @@ import "dart:async";
 
 import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/core/model/player_config.dart";
-import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
+import "package:among_us_helper/modules/app/cubit/player_config_cubit.dart";
 import "package:bloc/bloc.dart";
 import "package:logging/logging.dart";
 import "package:meta/meta.dart";
+import "package:rxdart/rxdart.dart";
 
 part "player_select_state.dart";
 
@@ -13,37 +14,44 @@ class PlayerSelectCubit extends Cubit<PlayerSelectState> {
   final Logger _logger = Logger("PlayerSelectCubit");
 
   /// Used to track disabled players and remove them from the options list.
-  final PlayerConfigRepository _playerConfigRepository;
+  final PlayerConfigCubit _playerConfigCubit;
 
   /// Keeps track of our repository subscription.
-  StreamSubscription<List<PlayerConfig>> _playerConfigSubscription;
+  StreamSubscription<PlayerSelectLoadSuccess> _playerConfigSubscription;
 
-  PlayerSelectCubit({@required PlayerConfigRepository playerConfigRepository})
-      : this._playerConfigRepository = playerConfigRepository,
+  PlayerSelectCubit({@required PlayerConfigCubit playerConfigCubit})
+      : this._playerConfigCubit = playerConfigCubit,
         super(PlayerSelectInitial()) {
-    Stream<List<PlayerConfig>> pathingEntryStream = _playerConfigRepository.playerConfigs;
-    _playerConfigSubscription = pathingEntryStream.listen((List<PlayerConfig> event) {
-      // Create a fresh state with all players unselected.
-      Map<Player, bool> newState =
-          Map.fromIterable(Player.values, key: (player) => player, value: (_) => false);
+    // Map our input cubit states to ones that contain data.
+    Stream<List<PlayerConfig>> pathingEntryStream = _playerConfigCubit
+        .startWith(_playerConfigCubit.state)
+        .where((PlayerConfigState state) => state is PlayerConfigLoadSuccess)
+        .map((PlayerConfigState state) => (state as PlayerConfigLoadSuccess).config);
 
-      // If we have a selection state present, copy over the current values.
-      if (state is PlayerSelectLoadSuccess) {
-        PlayerSelectLoadSuccess stateSuccess = state;
-        newState.addAll(stateSuccess.selection);
-      }
+    // Every time we receive new mapped data, emit it.
+    _playerConfigSubscription = pathingEntryStream.map(_mapInputDataToState).listen(emit);
+  }
 
-      // Remove all disabled players.
-      newState.removeWhere((Player player, bool selected) =>
-          event.firstWhere((PlayerConfig config) => config.player == player).enabled == false);
+  PlayerSelectLoadSuccess _mapInputDataToState(List<PlayerConfig> configs) {
+    // Create a fresh state with all players unselected.
+    Map<Player, bool> newState =
+        Map.fromIterable(Player.values, key: (player) => player, value: (_) => false);
 
-      Map<Player, String> names = Map.fromIterable(event,
-          key: (config) => config.player,
-          value: (config) => _textOrPlayerName(config.name, config.player));
+    // If we have a selection state present, copy over the current values.
+    if (state is PlayerSelectLoadSuccess) {
+      PlayerSelectLoadSuccess stateSuccess = state;
+      newState.addAll(stateSuccess.selection);
+    }
 
-      // Push the new state.
-      emit(PlayerSelectLoadSuccess(newState, names));
-    });
+    // Remove all disabled players.
+    newState.removeWhere((Player player, bool selected) =>
+        configs.firstWhere((PlayerConfig config) => config.player == player).enabled == false);
+
+    Map<Player, String> names = Map.fromIterable(configs,
+        key: (config) => config.player,
+        value: (config) => _textOrPlayerName(config.name, config.player));
+
+    return PlayerSelectLoadSuccess(newState, names);
   }
 
   /// Toggles the selection state of the given [player].

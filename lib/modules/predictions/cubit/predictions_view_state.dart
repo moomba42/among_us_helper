@@ -1,17 +1,16 @@
-part of "predictions_cubit.dart";
+part of "predictions_view_cubit.dart";
 
 @immutable
-abstract class PredictionsState {}
+abstract class PredictionsViewState {}
 
-class PredictionsInitial extends PredictionsState {}
+class PredictionsViewInitial extends PredictionsViewState {}
 
-class PredictionsLoadSuccess extends PredictionsState {
-  // TODO: Use Predictions type alias after dart adds the feature.
+class PredictionsViewLoadSuccess extends PredictionsViewState {
   final Map<PredictionsSection, List<Player>> predictions;
   final Map<Player, String> names;
   final Map<Player, bool> enables;
 
-  PredictionsLoadSuccess.unmodifiable(
+  PredictionsViewLoadSuccess.unmodifiable(
     Map<PredictionsSection, List<Player>> predictions,
     Map<Player, String> names,
     Map<Player, bool> enables,

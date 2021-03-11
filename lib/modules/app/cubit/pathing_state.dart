@@ -6,5 +6,5 @@ abstract class PathingState {}
 class PathingLoadSuccess extends PathingState {
   final List<PathingEntry> pathing;
 
-  PathingLoadSuccess(List<PathingEntry> pathing) : this.pathing = List.unmodifiable(pathing);
+  PathingLoadSuccess(List<PathingEntry> pathing) : this.pathing = List<PathingEntry>.unmodifiable(pathing);
 }

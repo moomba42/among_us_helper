@@ -1,7 +1,7 @@
-import "package:among_us_helper/modules/pathing/cubit/pathing_cubit.dart";
+import "package:among_us_helper/modules/app/cubit/pathing_cubit.dart";
+import "package:among_us_helper/modules/app/cubit/player_config_cubit.dart";
+import "package:among_us_helper/modules/pathing/cubit/pathing_view_cubit.dart";
 import "package:among_us_helper/modules/pathing/pathing_view.dart";
-import "package:among_us_helper/modules/pathing/repository/pathing_repository.dart";
-import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -10,17 +10,17 @@ class PathingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).canvasColor,
-      body: BlocProvider<PathingCubit>(
+      body: BlocProvider<PathingViewCubit>(
         create: _createCubit,
         child: PathingView(),
       ),
     );
   }
 
-  PathingCubit _createCubit(BuildContext context) {
-    return PathingCubit(
-      pathingRepository: context.read<PathingRepository>(),
-      playerConfigRepository: context.read<PlayerConfigRepository>(),
+  PathingViewCubit _createCubit(BuildContext context) {
+    return PathingViewCubit(
+      pathingCubit: context.read<PathingCubit>(),
+      playerConfigCubit: context.read<PlayerConfigCubit>(),
     );
   }
 }

@@ -20,6 +20,28 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
     emit(PlayerConfigLoadSuccess(updatedList));
   }
 
+  /// Puts all entries of [updatedConfigs] into the current configs,
+  /// replacing old ones, matching by player.
+  void updateAll(List<PlayerConfig> updatedConfigs) {
+    PlayerConfigLoadSuccess stateSuccess = state;
+
+    // Create a new list of configs
+    List<PlayerConfig> newConfigs = [];
+
+    // Duplicate current data into new list
+    newConfigs.addAll(stateSuccess.config);
+
+    // Remove duplicates
+    newConfigs.removeWhere((PlayerConfig left) =>
+        updatedConfigs.any((PlayerConfig right) => left.player == right.player));
+
+    // Add new entries
+    newConfigs.addAll(updatedConfigs);
+
+    // Push changes
+    emit(PlayerConfigLoadSuccess(newConfigs));
+  }
+
   /// Resets the state to a default configuration.
   void reset() {
     emit(PlayerConfigLoadSuccess(_buildDefaultPlayerConfig()));

@@ -8,6 +8,6 @@ class PredictionsLoadSuccess extends PredictionsState {
 
   PredictionsLoadSuccess(Map<PredictionsSection, List<Player>> predictions)
       : this.predictions = Map.unmodifiable(predictions.map(
-          (section, value) => MapEntry(section, List.unmodifiable(value)),
+          (section, value) => MapEntry(section, List<Player>.unmodifiable(value)),
         ));
 }

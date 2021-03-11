@@ -1,6 +1,6 @@
 import "package:among_us_helper/core/model/au_map.dart";
 import "package:among_us_helper/core/widgets/confirmation_dialog.dart";
-import "package:among_us_helper/modules/map/cubit/map_cubit.dart";
+import "package:among_us_helper/modules/map/cubit/map_view_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -62,12 +62,12 @@ class _MapSelectOverlayState extends State<MapSelectOverlay> with TickerProvider
           bottom: 0,
           child: _GradientBackground(),
         ),
-        BlocBuilder<MapCubit, MapState>(
-          builder: (BuildContext context, MapState state) {
+        BlocBuilder<MapViewCubit, MapViewState>(
+          builder: (BuildContext context, MapViewState state) {
             AUMap map = AUMap.MIRA;
 
-            if (state is MapLoadSuccess) {
-              MapLoadSuccess stateSuccess = state;
+            if (state is MapViewLoadSuccess) {
+              MapViewLoadSuccess stateSuccess = state;
               map = stateSuccess.map;
             }
 
@@ -149,7 +149,7 @@ class _MapSelectOverlayState extends State<MapSelectOverlay> with TickerProvider
         return;
       }
 
-      context.read<MapCubit>().setMap(map);
+      context.read<MapViewCubit>().setMap(map);
       if (_expanded) {
         _expanded = false;
         _animController.forward();

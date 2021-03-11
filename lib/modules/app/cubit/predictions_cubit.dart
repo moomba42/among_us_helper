@@ -9,8 +9,8 @@ part "predictions_state.dart";
 class PredictionsCubit extends Cubit<PredictionsState> {
   PredictionsCubit() : super(PredictionsLoadSuccess(_buildDefaultPredictions()));
 
-  /// Moves a player to a given section to the given position.
-  /// Also makes sure that the player is not present in other sections.
+  /// Moves a [player] to a given [section] to the given [position].
+  /// Also makes sure that the [player] is not present in other sections.
   void move({@required Player player, @required PredictionsSection section, int newPosition = 0}) {
     PredictionsLoadSuccess successState = state;
 

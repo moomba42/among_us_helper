@@ -1,49 +1,68 @@
 import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/core/model/player_config.dart";
-import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
+import "package:among_us_helper/modules/app/cubit/player_config_cubit.dart";
 import "package:bloc/bloc.dart";
 import "package:logging/logging.dart";
 import "package:meta/meta.dart";
+import "package:rxdart/rxdart.dart";
 
-part "player_config_state.dart";
+part "player_config_view_state.dart";
 
-class PlayerConfigCubit extends Cubit<PlayerConfigState> {
-  final Logger _logger = Logger("PlayerConfigCubit");
-  final PlayerConfigRepository _playerConfigRepository;
+class PlayerConfigViewCubit extends Cubit<PlayerConfigViewState> {
+  final Logger _logger = Logger("PlayerConfigViewCubit");
+  final PlayerConfigCubit _playerConfigCubit;
 
-  PlayerConfigCubit({@required PlayerConfigRepository playerConfigRepository})
-      : this._playerConfigRepository = playerConfigRepository,
-        super(PlayerConfigInitial());
+  PlayerConfigViewCubit({@required PlayerConfigCubit playerConfigCubit})
+      : this._playerConfigCubit = playerConfigCubit,
+        super(PlayerConfigViewInitial()) {
+    _fetchCurrent();
+  }
 
   /// Fetches a single, current map of the player names from the repository,
   /// and commits them as a state.
-  void fetch() {
-    _playerConfigRepository.playerConfigs.take(1).listen((List<PlayerConfig> value) {
-      Map<Player, String> names = Map.fromIterable(
-        value,
-        key: (config) => config.player,
-        value: (config) => config.name,
-      );
-      Map<Player, bool> enables = Map.fromIterable(
-        value,
-        key: (config) => config.player,
-        value: (config) => config.enabled,
-      );
-      emit(PlayerConfigLoadSuccess(names, enables));
-    }).onError((error, stackTrace) {
+  void _fetchCurrent() {
+    _playerConfigCubit
+        .startWith(_playerConfigCubit.state)
+        .where((PlayerConfigState state) => state is PlayerConfigLoadSuccess)
+        .map((PlayerConfigState state) => (state as PlayerConfigLoadSuccess).config)
+        .take(1)
+        .map(_mapInputDataToState)
+        .listen(emit)
+        .onError((error, stackTrace) {
       _logger.severe("Could not fetch player config", error, stackTrace);
     });
   }
 
-  /// Changes a given [player]'s name to the given [name].
+  /// Maps the data received from the inputs to a success state,
+  /// so that its easily accessible by the UI.
+  PlayerConfigViewLoadSuccess _mapInputDataToState(List<PlayerConfig> configs) {
+    // Map names by the players in the config list.
+    Map<Player, String> names = Map.fromIterable(
+      configs,
+      key: (config) => config.player,
+      value: (config) => config.name,
+    );
+
+    // Map enables by the players in the config list.
+    Map<Player, bool> enables = Map.fromIterable(
+      configs,
+      key: (config) => config.player,
+      value: (config) => config.enabled,
+    );
+
+    // Emit a new state using the mapped config fields.
+    return PlayerConfigViewLoadSuccess(names, enables);
+  }
+
+  /// Changes a given [player]"s name to the given [name].
   /// Does not commit the change to the repository, but emits an updated state.
   void updatePlayerName({@required Player player, @required String name}) {
-    if (state is! PlayerConfigLoadSuccess) {
+    if (state is! PlayerConfigViewLoadSuccess) {
       _logger.warning("No player config data. Could not modify state.");
       return;
     }
 
-    PlayerConfigLoadSuccess successState = state;
+    PlayerConfigViewLoadSuccess successState = state;
 
     // Copy the original predictions
     Map<Player, String> newPlayerNames = Map.of(successState.playerNames);
@@ -54,16 +73,16 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
     // Also copy over the enables, but dont modify them.
     Map<Player, bool> newPlayerEnables = Map.of(successState.playerEnables);
 
-    emit(PlayerConfigLoadSuccess(newPlayerNames, newPlayerEnables));
+    emit(PlayerConfigViewLoadSuccess(newPlayerNames, newPlayerEnables));
   }
 
   void updatePlayerEnabled({@required Player player, @required bool enabled}) {
-    if (state is! PlayerConfigLoadSuccess) {
+    if (state is! PlayerConfigViewLoadSuccess) {
       _logger.warning("No player config data. Could not modify state.");
       return;
     }
 
-    PlayerConfigLoadSuccess successState = state;
+    PlayerConfigViewLoadSuccess successState = state;
 
     // Copy the original predictions
     Map<Player, bool> newPlayerEnables = Map.of(successState.playerEnables);
@@ -74,7 +93,7 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
     // Also copy over the enables, but dont modify them.
     Map<Player, String> newPlayerNames = Map.of(successState.playerNames);
 
-    emit(PlayerConfigLoadSuccess(newPlayerNames, newPlayerEnables));
+    emit(PlayerConfigViewLoadSuccess(newPlayerNames, newPlayerEnables));
   }
 
   /// Resets all the player names to empty strings.
@@ -85,17 +104,17 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
     Map<Player, bool> enabledPlayers =
         Map.fromEntries(Player.values.map((Player player) => MapEntry(player, true)));
 
-    emit(PlayerConfigLoadSuccess(emptyPlayerNames, enabledPlayers));
+    emit(PlayerConfigViewLoadSuccess(emptyPlayerNames, enabledPlayers));
   }
 
   /// Commits the current state to the repository.
   void submit() {
-    if (state is! PlayerConfigLoadSuccess) {
+    if (state is! PlayerConfigViewLoadSuccess) {
       _logger.warning("Cannot submit new config while loading data.");
       return;
     }
 
-    PlayerConfigLoadSuccess stateSuccess = state;
+    PlayerConfigViewLoadSuccess stateSuccess = state;
     List<PlayerConfig> playerConfigs = Player.values.map((Player player) {
       String name = stateSuccess.playerNames[player];
       bool enabled = stateSuccess.playerEnables[player];
@@ -105,6 +124,6 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
         enabled: enabled,
       );
     }).toList();
-    _playerConfigRepository.update(playerConfigs);
+    _playerConfigCubit.updateAll(playerConfigs);
   }
 }

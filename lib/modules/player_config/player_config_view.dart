@@ -1,7 +1,7 @@
 import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/core/widgets/submit_button.dart";
 import "package:among_us_helper/core/widgets/title_bar.dart";
-import "package:among_us_helper/modules/player_config/cubit/player_config_cubit.dart";
+import "package:among_us_helper/modules/player_config/cubit/player_config_view_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -37,9 +37,8 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
       value: (player) => TextEditingController(),
     );
 
-    PlayerConfigCubit boundCubit = context.read<PlayerConfigCubit>();
+    PlayerConfigViewCubit boundCubit = context.read<PlayerConfigViewCubit>();
     boundCubit.listen(_applyStateToNameInputs);
-    boundCubit.fetch();
 
     super.initState();
   }
@@ -96,20 +95,20 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
           Divider(height: _LIST_DIVIDER_HEIGHT, indent: 69),
       itemBuilder: (BuildContext context, int index) {
         Player player = Player.values[index];
-        return BlocBuilder<PlayerConfigCubit, PlayerConfigState>(
-          buildWhen: (PlayerConfigState previous, PlayerConfigState next) {
-            if ((previous is PlayerConfigLoadSuccess) && (next is PlayerConfigLoadSuccess)) {
-              PlayerConfigLoadSuccess previousSuccess = previous;
-              PlayerConfigLoadSuccess nextSuccess = next;
+        return BlocBuilder<PlayerConfigViewCubit, PlayerConfigViewState>(
+          buildWhen: (PlayerConfigViewState previous, PlayerConfigViewState next) {
+            if ((previous is PlayerConfigViewLoadSuccess) && (next is PlayerConfigViewLoadSuccess)) {
+              PlayerConfigViewLoadSuccess previousSuccess = previous;
+              PlayerConfigViewLoadSuccess nextSuccess = next;
               if (previousSuccess.playerEnables[player] == nextSuccess.playerEnables[player]) {
                 return false;
               }
             }
             return true;
           },
-          builder: (BuildContext context, PlayerConfigState state) {
-            bool loaded = (state is PlayerConfigLoadSuccess);
-            bool enabled = (state is PlayerConfigLoadSuccess) && state.playerEnables[player];
+          builder: (BuildContext context, PlayerConfigViewState state) {
+            bool loaded = (state is PlayerConfigViewLoadSuccess);
+            bool enabled = (state is PlayerConfigViewLoadSuccess) && state.playerEnables[player];
 
             return ListTile(
               title: SizedBox(
@@ -159,12 +158,12 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
 
   /// Takes the given cubit [state] and overwrites an input's value if its different.
   /// This check is to prevent unnecessary widget rebuilds.
-  void _applyStateToNameInputs(PlayerConfigState state) {
-    if (state is! PlayerConfigLoadSuccess) {
+  void _applyStateToNameInputs(PlayerConfigViewState state) {
+    if (state is! PlayerConfigViewLoadSuccess) {
       return;
     }
 
-    PlayerConfigLoadSuccess stateSuccess = state;
+    PlayerConfigViewLoadSuccess stateSuccess = state;
     stateSuccess.playerNames.forEach((Player player, String name) {
       if (_nameControllers[player].text != name) {
         _nameControllers[player].text = name;
@@ -177,7 +176,7 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
   /// and sends the [newValue] to the cubit.
   void _onPlayerNameInput(Player player, String newValue) {
     _markAsDirty();
-    context.read<PlayerConfigCubit>().updatePlayerName(player: player, name: newValue);
+    context.read<PlayerConfigViewCubit>().updatePlayerName(player: player, name: newValue);
   }
 
   /// Handles the input event on a [player] enabled checkbox.
@@ -185,7 +184,7 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
   /// and sends the [newValue] to the cubit.
   void _onPlayerToggle(Player player, bool newValue) {
     _markAsDirty();
-    context.read<PlayerConfigCubit>().updatePlayerEnabled(player: player, enabled: newValue);
+    context.read<PlayerConfigViewCubit>().updatePlayerEnabled(player: player, enabled: newValue);
   }
 
   /// Marks this form as dirty and triggers a rebuild if necessary.
@@ -201,7 +200,7 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
   /// Forwards the action to the cubit.
   void _onResetPressed() {
     _markAsDirty();
-    context.read<PlayerConfigCubit>().reset();
+    context.read<PlayerConfigViewCubit>().reset();
   }
 
   /// Handles the title bar's back button press.
@@ -213,7 +212,7 @@ class _PlayerNamesViewState extends State<PlayerNamesView> {
   /// Handles the submit button press.
   /// Forwards the action to the cubit, leaves this screen and goes back.
   void _onSubmit() {
-    context.read<PlayerConfigCubit>().submit();
+    context.read<PlayerConfigViewCubit>().submit();
     Navigator.of(context).pop();
   }
 }

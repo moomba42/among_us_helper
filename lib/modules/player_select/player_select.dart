@@ -2,7 +2,7 @@ import "dart:math";
 
 import "package:among_us_helper/core/model/player.dart";
 import "package:among_us_helper/core/widgets/submit_button.dart";
-import "package:among_us_helper/modules/player_config/repositories/player_config_repository.dart";
+import "package:among_us_helper/modules/app/cubit/player_config_cubit.dart";
 import "package:among_us_helper/modules/player_select/cubit/player_select_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
@@ -22,7 +22,7 @@ class PlayerSelect extends StatefulWidget {
               BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8))),
       builder: (context) => BlocProvider<PlayerSelectCubit>(
           create: (BuildContext context) =>
-              PlayerSelectCubit(playerConfigRepository: context.read<PlayerConfigRepository>()),
+              PlayerSelectCubit(playerConfigCubit: context.read<PlayerConfigCubit>()),
           child: PlayerSelect()),
     );
   }

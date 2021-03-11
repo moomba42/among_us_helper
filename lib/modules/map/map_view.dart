@@ -1,6 +1,6 @@
 import "package:among_us_helper/core/model/au_map.dart";
 import "package:among_us_helper/core/model/player.dart";
-import "package:among_us_helper/modules/map/cubit/map_cubit.dart";
+import "package:among_us_helper/modules/map/cubit/map_view_cubit.dart";
 import "package:among_us_helper/modules/map/map_display.dart";
 import "package:among_us_helper/modules/player_select/player_select.dart";
 import "package:flutter/material.dart";
@@ -21,7 +21,7 @@ class _MapViewState extends State<MapView> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => PhotoView.customChild(
-          child: BlocBuilder<MapCubit, MapState>(
+          child: BlocBuilder<MapViewCubit, MapViewState>(
             builder: _buildMapForState,
           ),
           childSize: Size(MAP_WIDTH, MAP_HEIGHT),
@@ -30,8 +30,8 @@ class _MapViewState extends State<MapView> {
     );
   }
 
-  Widget _buildMapForState(BuildContext context, MapState state) {
-    if (state is! MapLoadSuccess) {
+  Widget _buildMapForState(BuildContext context, MapViewState state) {
+    if (state is! MapViewLoadSuccess) {
       return Center(
         child: SizedBox(
           width: 128,
@@ -43,7 +43,7 @@ class _MapViewState extends State<MapView> {
       );
     }
 
-    MapLoadSuccess stateSuccess = state;
+    MapViewLoadSuccess stateSuccess = state;
 
     var assetImage = SvgPicture.asset(stateSuccess.map.getSvgAsset());
 
@@ -92,7 +92,7 @@ class _MapViewState extends State<MapView> {
         return;
       }
 
-      this.context.read<MapCubit>().createPathingEntryAt(
+      this.context.read<MapViewCubit>().createPathingEntryAt(
             position: inPixels,
             players: selectedPlayers,
           );

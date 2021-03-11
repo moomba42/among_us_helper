@@ -1,12 +1,15 @@
 import "package:among_us_helper/core/icons.dart";
 import "package:among_us_helper/core/widgets/confirmation_dialog.dart";
+import 'package:among_us_helper/modules/app/cubit/map_cubit.dart';
+import "package:among_us_helper/modules/app/cubit/pathing_cubit.dart";
+import 'package:among_us_helper/modules/app/cubit/player_config_cubit.dart';
+import "package:among_us_helper/modules/app/cubit/predictions_cubit.dart";
 import "package:among_us_helper/modules/map/map_page.dart";
 import "package:among_us_helper/modules/pathing/pathing_page.dart";
-import "package:among_us_helper/modules/pathing/repository/pathing_repository.dart";
 import "package:among_us_helper/modules/predictions/predictions_page.dart";
-import "package:among_us_helper/modules/predictions/repositories/predictions_repository.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:among_us_helper/core/model/au_map.dart";
 
 /// Widget that displays the most important app screens in a mobile format, using a tabbed view.
 class AppViewMobile extends StatefulWidget {
@@ -114,8 +117,10 @@ class _AppViewMobileState extends State<AppViewMobile> {
         return;
       }
 
-      context.read<PathingRepository>().reset();
-      context.read<PredictionsRepository>().reset();
+      context.read<MapCubit>().changeSelection(AUMap.MIRA);
+      context.read<PathingCubit>().reset();
+      context.read<PredictionsCubit>().reset();
+      context.read<PlayerConfigCubit>().reset();
     });
   }
 }

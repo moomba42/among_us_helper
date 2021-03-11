@@ -1,7 +1,7 @@
 import "dart:io";
 
 import "package:among_us_helper/core/model/player.dart";
-import "package:among_us_helper/modules/predictions/cubit/predictions_cubit.dart";
+import "package:among_us_helper/modules/predictions/cubit/predictions_view_cubit.dart";
 import "package:among_us_helper/modules/predictions/model/predictions.dart";
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
@@ -30,7 +30,7 @@ class _PredictionsListState extends State<PredictionsList> {
   Widget build(BuildContext context) {
     // If we are still loading, show a spinning loader and listen for changes to the state.
     if (_isLoading) {
-      return BlocListener<PredictionsCubit, PredictionsState>(
+      return BlocListener<PredictionsViewCubit, PredictionsViewState>(
         listener: _onNewCubitState,
         child: Center(
           child: CircularProgressIndicator(),
@@ -45,7 +45,7 @@ class _PredictionsListState extends State<PredictionsList> {
       decoratePlaceholder: _withEmptyDecoration,
       onReorderDone: _onListReorderDone,
       onReorder: _onListReorder,
-      child: BlocListener<PredictionsCubit, PredictionsState>(
+      child: BlocListener<PredictionsViewCubit, PredictionsViewState>(
         listener: _onNewCubitState,
         child: _buildList(context),
       ),
@@ -69,10 +69,10 @@ class _PredictionsListState extends State<PredictionsList> {
   }
 
   /// Gets the current position of the given [player],
-  /// and submits that information to the [PredictionsCubit].
+  /// and submits that information to the [PredictionsViewCubit].
   void _submitPredictionChange(Player player) {
     _EntryPosition entryPosition = _getEntryPositionByPlayer(player);
-    context.read<PredictionsCubit>().move(
+    context.read<PredictionsViewCubit>().move(
           player: player,
           section: entryPosition.section,
           newPosition: entryPosition.index,
@@ -158,10 +158,10 @@ class _PredictionsListState extends State<PredictionsList> {
   /// Handler for cubit [state] changes.
   /// When a change occurs, we treat the incoming information as current,
   /// and discard any local changes by overwriting the local state, thus triggering UI rebuild.
-  void _onNewCubitState(BuildContext context, PredictionsState state) {
+  void _onNewCubitState(BuildContext context, PredictionsViewState state) {
     setState(() {
-      if (!(_isLoading = state is! PredictionsLoadSuccess)) {
-        PredictionsLoadSuccess stateSuccess = state;
+      if (!(_isLoading = state is! PredictionsViewLoadSuccess)) {
+        PredictionsViewLoadSuccess stateSuccess = state;
         _predictionsMap = Map.of(stateSuccess.predictions).map((key, value) => MapEntry(key, List.of(value)));
         // Remove every disabled player from the map
         _predictionsMap.values.forEach((List<Player> sectionPlayers) =>
@@ -257,8 +257,8 @@ class _Entry extends StatelessWidget {
           trailing: SizedBox(
             width: 24,
           ),
-          title: BlocBuilder<PredictionsCubit, PredictionsState>(
-            builder: (BuildContext context, PredictionsState state) =>
+          title: BlocBuilder<PredictionsViewCubit, PredictionsViewState>(
+            builder: (BuildContext context, PredictionsViewState state) =>
                 _buildLabel(context, state, textColor),
           ),
           tileColor: bgColor,
@@ -305,12 +305,12 @@ class _Entry extends StatelessWidget {
 
   /// Builds an appropriate label based on the given [state].
   /// Sets the color to the given [textColor].
-  Widget _buildLabel(BuildContext context, PredictionsState state, Color textColor) {
+  Widget _buildLabel(BuildContext context, PredictionsViewState state, Color textColor) {
     String label;
 
     // If the predictions have been loaded, then look up the player's name.
-    if (state is PredictionsLoadSuccess) {
-      PredictionsLoadSuccess stateSuccess = state;
+    if (state is PredictionsViewLoadSuccess) {
+      PredictionsViewLoadSuccess stateSuccess = state;
       label = stateSuccess.names[_player];
     } else {
       label = "Loading...";
