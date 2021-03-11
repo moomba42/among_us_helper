@@ -27,11 +27,10 @@ class MapCubit extends Cubit<MapState> {
       if (state is MapLoadSuccess) {
         MapLoadSuccess stateSuccess = state;
         emit(MapLoadSuccess(stateSuccess.map, event));
+      } else {
+        emit(MapLoadSuccess(AUMap.MIRA, event));
       }
     });
-
-    // TODO: Use hydrated cubit
-    setMap(AUMap.MIRA);
   }
 
   void setMap(AUMap map) async {
