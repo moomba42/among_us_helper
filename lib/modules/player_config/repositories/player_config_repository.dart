@@ -8,8 +8,15 @@ class PlayerConfigRepository {
   final BehaviorSubject<List<PlayerConfig>> _playerConfigs;
 
   PlayerConfigRepository()
-      : this._playerConfigs = BehaviorSubject.seeded(
-            Player.values.map((Player player) => PlayerConfig(player, "", true)).toList());
+      : this._playerConfigs = BehaviorSubject.seeded(Player.values
+            .map(
+              (Player player) => PlayerConfig(
+                player: player,
+                name: "",
+                enabled: true,
+              ),
+            )
+            .toList());
 
   Stream<List<PlayerConfig>> get playerConfigs => _playerConfigs.stream;
 

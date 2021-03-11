@@ -99,7 +99,11 @@ class PlayerConfigCubit extends Cubit<PlayerConfigState> {
     List<PlayerConfig> playerConfigs = Player.values.map((Player player) {
       String name = stateSuccess.playerNames[player];
       bool enabled = stateSuccess.playerEnables[player];
-      return PlayerConfig(player, name, enabled);
+      return PlayerConfig(
+        player: player,
+        name: name,
+        enabled: enabled,
+      );
     }).toList();
     _playerConfigRepository.update(playerConfigs);
   }
