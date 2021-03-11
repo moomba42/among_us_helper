@@ -1,8 +1,8 @@
 import "package:among_us_helper/core/icons.dart";
 import "package:among_us_helper/core/widgets/confirmation_dialog.dart";
-import 'package:among_us_helper/modules/app/cubit/map_cubit.dart';
+import "package:among_us_helper/modules/app/cubit/map_cubit.dart";
 import "package:among_us_helper/modules/app/cubit/pathing_cubit.dart";
-import 'package:among_us_helper/modules/app/cubit/player_config_cubit.dart';
+import "package:among_us_helper/modules/app/cubit/player_config_cubit.dart";
 import "package:among_us_helper/modules/app/cubit/predictions_cubit.dart";
 import "package:among_us_helper/modules/map/map_page.dart";
 import "package:among_us_helper/modules/pathing/pathing_page.dart";

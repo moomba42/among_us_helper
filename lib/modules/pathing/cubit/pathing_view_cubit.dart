@@ -6,14 +6,12 @@ import "package:among_us_helper/core/model/player_config.dart";
 import "package:among_us_helper/modules/app/cubit/pathing_cubit.dart";
 import "package:among_us_helper/modules/app/cubit/player_config_cubit.dart";
 import "package:bloc/bloc.dart";
-import "package:logging/logging.dart";
 import "package:meta/meta.dart";
 import "package:rxdart/rxdart.dart";
 
 part "pathing_view_state.dart";
 
 class PathingViewCubit extends Cubit<PathingViewState> {
-  final Logger _logger = Logger("PathingViewCubit");
   final PathingCubit _pathingCubit;
 
   StreamSubscription<PathingViewLoadSuccess> _stateSubscription;

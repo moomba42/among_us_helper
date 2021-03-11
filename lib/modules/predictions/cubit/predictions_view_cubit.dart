@@ -6,14 +6,12 @@ import "package:among_us_helper/modules/app/cubit/player_config_cubit.dart";
 import "package:among_us_helper/modules/app/cubit/predictions_cubit.dart";
 import "package:among_us_helper/modules/predictions/model/predictions.dart";
 import "package:bloc/bloc.dart";
-import "package:logging/logging.dart";
 import "package:meta/meta.dart";
 import "package:rxdart/rxdart.dart";
 
 part "predictions_view_state.dart";
 
 class PredictionsViewCubit extends Cubit<PredictionsViewState> {
-  final Logger _logger = Logger("PredictionsViewCubit");
   final PredictionsCubit _predictionsCubit;
   final PlayerConfigCubit _playerConfigCubit;
 
