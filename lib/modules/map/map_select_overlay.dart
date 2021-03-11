@@ -1,5 +1,6 @@
 import "package:among_us_helper/core/model/au_map.dart";
 import "package:among_us_helper/core/widgets/confirmation_dialog.dart";
+import "package:among_us_helper/core/widgets/system_container_padding.dart";
 import "package:among_us_helper/modules/map/cubit/map_view_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -74,15 +75,17 @@ class _MapSelectOverlayState extends State<MapSelectOverlay> with TickerProvider
             List<AUMap> others = List.of(AUMap.values)..remove(map);
 
             return SafeArea(
-              child: Column(
-                children: [
-                  _buildSelection(map),
-                  AnimatedContainer(
-                    height: _expanded ? APP_BAR_HEIGHT * (AUMap.values.length - 1) : 0,
-                    duration: Duration(milliseconds: 200),
-                    child: _buildMapOptionsList(others),
-                  )
-                ],
+              child: SystemContainerPadding(
+                child: Column(
+                  children: [
+                    _buildSelection(map),
+                    AnimatedContainer(
+                      height: _expanded ? APP_BAR_HEIGHT * (AUMap.values.length - 1) : 0,
+                      duration: Duration(milliseconds: 200),
+                      child: _buildMapOptionsList(others),
+                    )
+                  ],
+                ),
               ),
             );
           },
