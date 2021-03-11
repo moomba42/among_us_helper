@@ -117,10 +117,8 @@ class _AppViewMobileState extends State<AppViewMobile> {
         return;
       }
 
-      context.read<MapCubit>().changeSelection(AUMap.MIRA);
       context.read<PathingCubit>().reset();
       context.read<PredictionsCubit>().reset();
-      context.read<PlayerConfigCubit>().reset();
     });
   }
 }
