@@ -1,15 +1,12 @@
 import "package:among_us_helper/core/icons.dart";
 import "package:among_us_helper/core/widgets/confirmation_dialog.dart";
-import "package:among_us_helper/modules/app/cubit/map_cubit.dart";
 import "package:among_us_helper/modules/app/cubit/pathing_cubit.dart";
-import "package:among_us_helper/modules/app/cubit/player_config_cubit.dart";
 import "package:among_us_helper/modules/app/cubit/predictions_cubit.dart";
 import "package:among_us_helper/modules/map/map_page.dart";
 import "package:among_us_helper/modules/pathing/pathing_page.dart";
 import "package:among_us_helper/modules/predictions/predictions_page.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:among_us_helper/core/model/au_map.dart";
 
 /// Widget that displays the most important app screens in a mobile format, using a tabbed view.
 class AppViewMobile extends StatefulWidget {
@@ -18,7 +15,7 @@ class AppViewMobile extends StatefulWidget {
 }
 
 class _AppViewMobileState extends State<AppViewMobile> {
-  /// Local UI state holding the selected tab.
+  /// Local UI state keeping track of the selected tab.
   _Tab _selectedTab = _Tab.MAP;
 
   @override
@@ -46,15 +43,29 @@ class _AppViewMobileState extends State<AppViewMobile> {
   }
 
   Widget _buildActionButton() {
-    return FloatingActionButton.extended(
-      onPressed: _startNewRound,
-      label: Text("NEW ROUND"),
-      icon: Icon(Icons.refresh),
-    );
+    switch (_selectedTab) {
+      case _Tab.MAP:
+        return FloatingActionButton.extended(
+          onPressed: _clearMap,
+          label: Text("CLEAR"),
+          icon: Icon(Icons.close),
+        );
+      case _Tab.PREDICTIONS:
+        return FloatingActionButton.extended(
+          onPressed: _resetPredictions,
+          label: Text("RESET"),
+          icon: Icon(Icons.refresh),
+        );
+      case _Tab.PATHING:
+      default:
+        return null;
+    }
   }
 
   Widget _buildNavigationBar(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
+
+    // Build a tab for each [_Tab] value.
     List<BottomNavigationBarItem> itemsFromEnum = _Tab.values.map(_buildNavigationItem).toList();
 
     return BottomNavigationBar(
@@ -97,29 +108,30 @@ class _AppViewMobileState extends State<AppViewMobile> {
     });
   }
 
-  /// Resets pathing and predictions to let the player start a new round.
-  void _startNewRound() {
+  /// Creates a confirmation dialog, and if confirmed, clears the pathing information.
+  void _clearMap() {
     ConfirmationDialog.showConfirmationDialog(
       context: context,
-      title: Text("Starting new round"),
+      title: Text("Clearing map"),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("This will reset the pathing information & predictions."),
-          Text("Player names will be preserved."),
+          Text("This will reset the pathing information."),
           SizedBox(height: 8),
           Text("Are you sure you want to continue?"),
         ],
       ),
     ).then((Confirmation confirmation) {
-      if (confirmation != Confirmation.ACCEPTED) {
-        return;
+      if (confirmation == Confirmation.ACCEPTED) {
+        context.read<PathingCubit>().reset();
       }
-
-      context.read<PathingCubit>().reset();
-      context.read<PredictionsCubit>().reset();
     });
+  }
+
+  /// Resets the player predictions. All players are put into the unknown section.
+  void _resetPredictions() {
+    context.read<PredictionsCubit>().reset();
   }
 }
 
