@@ -1,6 +1,8 @@
 import "package:among_us_helper/core/model/au_map.dart";
 import "package:among_us_helper/core/widgets/confirmation_dialog.dart";
 import "package:among_us_helper/core/widgets/system_container_padding.dart";
+import 'package:among_us_helper/modules/app/cubit/pathing_cubit.dart';
+import 'package:among_us_helper/modules/app/cubit/predictions_cubit.dart';
 import "package:among_us_helper/modules/map/cubit/map_view_cubit.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -141,7 +143,7 @@ class _MapSelectOverlayState extends State<MapSelectOverlay> with TickerProvider
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Changing the map will reset the pathing information & notes."),
+          Text("Changing the map will reset the pathing information & predictions."),
           Text("Player names will be preserved."),
           SizedBox(height: 8),
           Text("Are you sure you want to continue?"),
@@ -153,6 +155,8 @@ class _MapSelectOverlayState extends State<MapSelectOverlay> with TickerProvider
       }
 
       context.read<MapViewCubit>().setMap(map);
+      context.read<PathingCubit>().reset();
+      context.read<PredictionsCubit>().reset();
       if (_expanded) {
         _expanded = false;
         _animController.forward();
