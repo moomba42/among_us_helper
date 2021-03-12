@@ -8,9 +8,12 @@ import "package:flutter_bloc/flutter_bloc.dart";
 class PredictionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PredictionsViewCubit>(
-      create: _createCubit,
-      child: PredictionsView(),
+    return Scaffold(
+      backgroundColor: Theme.of(context).canvasColor,
+      body: BlocProvider<PredictionsViewCubit>(
+        create: _createCubit,
+        child: PredictionsView(),
+      ),
     );
   }
 

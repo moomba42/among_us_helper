@@ -1,3 +1,4 @@
+import 'package:among_us_helper/modules/app/app_view_expanded.dart';
 import "package:among_us_helper/modules/app/app_view_mobile.dart";
 import "package:among_us_helper/modules/app/cubit/map_cubit.dart";
 import "package:among_us_helper/modules/app/cubit/pathing_cubit.dart";
@@ -33,7 +34,12 @@ class AppPage extends StatelessWidget {
         title: "Among Us Helper",
         theme: lightTheme,
         darkTheme: darkTheme,
-        home: AppViewMobile(),
+        home: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            bool useExpandedView = constraints.maxWidth > 1400;
+            return useExpandedView ? AppViewExpanded() : AppViewMobile();
+          },
+        ),
       ),
     );
   }

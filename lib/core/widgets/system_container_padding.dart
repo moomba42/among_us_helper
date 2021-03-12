@@ -9,7 +9,9 @@ class SystemContainerPadding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Listen for windows fullscreen mode on macos, and disable padding when that happens.
     double titleBarPadding = Platform.isMacOS ? 21 : 0;
+
     return Padding(
       padding: EdgeInsets.only(top: titleBarPadding),
       child: child,
