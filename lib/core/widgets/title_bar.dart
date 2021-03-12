@@ -20,7 +20,7 @@ class TitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle headline3 = Theme.of(context).textTheme.headline3.copyWith(color: Colors.black87);
+    TextStyle headline3 = Theme.of(context).textTheme.headline3;
     return SafeArea(
       child: SystemContainerPadding(
         child: Padding(

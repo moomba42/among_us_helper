@@ -7,15 +7,32 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 class AppPage extends StatelessWidget {
+  final ThemeData lightTheme = ThemeData(
+      primarySwatch: Colors.blue,
+      accentColor: Colors.blue,
+      brightness: Brightness.light,
+      textTheme: TextTheme(
+          headline3: TextStyle(color: Colors.black87)
+      )
+  );
+
+  final ThemeData darkTheme = ThemeData(
+      primarySwatch: Colors.blue,
+      accentColor: Colors.blue,
+      brightness: Brightness.dark,
+      textTheme: TextTheme(
+          headline3: TextStyle(color: Colors.white)
+      )
+  );
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: _buildBlocProviders(),
       child: MaterialApp(
         title: "Among Us Helper",
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: lightTheme,
+        darkTheme: darkTheme,
         home: AppViewMobile(),
       ),
     );

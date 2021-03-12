@@ -31,10 +31,10 @@ class SubmitButton extends StatelessWidget {
       padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 18)),
       backgroundColor: MaterialStateProperty.resolveWith((Set<MaterialState> states) {
         if (states.contains(MaterialState.disabled)) {
-          return Theme.of(context).disabledColor;
+          return Theme.of(context).buttonTheme.colorScheme.onSurface.withOpacity(0.38);
         }
 
-        return Theme.of(context).primaryColor;
+        return Theme.of(context).buttonTheme.colorScheme.primary;
       }),
     );
   }

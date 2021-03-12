@@ -338,7 +338,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle headline5 = Theme.of(context).textTheme.headline5.copyWith(color: Colors.black87);
+    TextStyle headline5 = Theme.of(context).textTheme.headline5;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Text(_section.getCamelName(), style: headline5),
